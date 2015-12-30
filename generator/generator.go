@@ -22,6 +22,23 @@ var DefaultMysqlTypeMap map[string]string = map[string]string{
 	"string":    "varchar(255)",
 	"time.Time": "timestamp",
 }
+var DefaultProtoBufTypeMap map[string]string = map[string]string{
+	"bool":      "bool",
+	"int":       "int32",
+	"int8":      "int32",
+	"int16":     "int32",
+	"int32":     "int32",
+	"int64":     "int64",
+	"uint8":     "uint32",
+	"uint16":    "uint32",
+	"uint32":    "uint32",
+	"uint64":    "uint64",
+	"float32":   "double",
+	"float64":   "double",
+	"string":    "string",
+	"time.Time": "int64",
+}
+
 var DefaultMysqlDefaultValueMap map[string]string = map[string]string{
 	"bool":      "0",
 	"int":       "0",
@@ -43,10 +60,12 @@ type Property struct {
 	PackageName string
 }
 type FieldDescriptoin struct {
-	FieldName         string
-	FieldGoType       string
-	TagString         string
-	MysqlTagFieldList TagFieldList
+	FieldName            string
+	FieldGoType          string
+	TagString            string
+	MysqlTagFieldList    TagFieldList
+	ProtoBufTagFieldList TagFieldList
+	Comments             string
 }
 
 func (fd FieldDescriptoin) IsInt() bool {
@@ -138,18 +157,18 @@ func (sd StructDescription) GenerateCreateTableSql() (sql string, err error) {
 	if len(sd.Fields) == 0 {
 		return "", errors.New("no filed found ,generate create table sql error")
 	}
-	sql += "create table if not exists `" + sd.GetMysqlTableName() + "`("
+	sql += "create table if not exists `" + sd.GetMysqlTableName() + "`(\n"
 	for idx, fieldD := range sd.Fields {
 		sql += "`" + fieldD.GetMysqlFieldName() + "` " + fieldD.GetMysqlType() + " NOT NULL DEFAULT " + fieldD.GetMysqlDefalutValue()
 		if idx != len(sd.Fields)-1 {
-			sql += ","
+			sql += ",\n"
 		} else {
-			sql += ""
+			sql += "\n"
 		}
 	}
 	pkList := sd.GetPK()
 	if len(pkList) != 0 {
-		sql += ",primary key (" + strings.Join(pkList, ",") + ")"
+		sql += ",primary key (" + strings.Join(pkList, ",") + ")\n"
 	}
 
 	sql += ");"
@@ -159,6 +178,8 @@ func (sd StructDescription) GenerateCreateTableSql() (sql string, err error) {
 func (sd StructDescription) GenerateCreateTableFunc() (goCode string) {
 	goCode += fmt.Sprintf("func (this %s) GetCreateTableSql() (sql string) {\n", sd.StructName)
 	sql, _ := sd.GenerateCreateTableSql()
+	sql = strings.Replace(sql, "\n", "", -1)
+
 	goCode += fmt.Sprintf("    sql = \"%s\"\n", sql)
 	goCode += "    return\n"
 	goCode += "}\n"
@@ -211,10 +232,10 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 			goCode += fmt.Sprintf("        this.%s", field.FieldName)
 		}
 		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "timestamp" {
-			goCode += fmt.Sprintf("        this.%s.Format(\"20060102150405\")", field.FieldName)
+			goCode += fmt.Sprintf("        formatTime(this.%s)", field.FieldName)
 		}
 		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "datetime" {
-			goCode += fmt.Sprintf("        this.%s.Format(\"20060102150405\")", field.FieldName)
+			goCode += fmt.Sprintf("        formatTime(this.%s)", field.FieldName)
 		}
 		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "int" {
 			goCode += fmt.Sprintf("        this.%s.Unix()", field.FieldName)

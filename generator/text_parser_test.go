@@ -16,12 +16,14 @@ func TestRemoveEmptyLineAndCommentLine(t *testing.T) {
 
 func TestRemoveCommentPart(t *testing.T) {
 	line := "hello // world"
-	newLine := removeCommentPart(line)
+	newLine, comments := splitCommentPart(line)
 	assert.Equal(t, "hello", newLine)
+	assert.Equal(t, "world", comments)
 
 	line = "hello"
-	newLine = removeCommentPart(line)
+	newLine, comments = splitCommentPart(line)
 	assert.Equal(t, "hello", newLine)
+	assert.Equal(t, "", comments)
 
 }
 

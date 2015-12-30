@@ -20,6 +20,7 @@ func ParseStructFileContent(content string) (sdList []StructDescription, prop Pr
 	structFirstLineRegex, _ = regexp.Compile("^type ([A-Za-z0-9_]+) struct[ \t]?{")
 	var isStartingParseStruct bool
 	var sd StructDescription
+	var lineComments string
 
 	content = strings.Replace(content, "\r", "", -1) //
 	lines := strings.Split(content, "\n")
@@ -32,7 +33,7 @@ func ParseStructFileContent(content string) (sdList []StructDescription, prop Pr
 			}
 			continue
 		}
-		line = removeCommentPart(line)
+		line, lineComments = splitCommentPart(line)
 		if !isStartingParseStruct {
 			matched := structFirstLineRegex.FindStringSubmatch(line)
 			if len(matched) >= 2 {
@@ -58,6 +59,8 @@ func ParseStructFileContent(content string) (sdList []StructDescription, prop Pr
 			if tagStartIdx != -1 && tagEndIdx != -1 && tagEndIdx != tagStartIdx {
 				fd.TagString = line[tagStartIdx+1 : tagEndIdx]
 				fd.MysqlTagFieldList = parseTag(reflect.StructTag(fd.TagString).Get("mysql"))
+				fd.ProtoBufTagFieldList = parseTag(reflect.StructTag(fd.TagString).Get("pb"))
+
 				line = line[:tagStartIdx]
 			}
 			tokens := strings.Fields(line)
@@ -66,6 +69,7 @@ func ParseStructFileContent(content string) (sdList []StructDescription, prop Pr
 			}
 			fd.FieldName = tokens[0]
 			fd.FieldGoType = tokens[1]
+			fd.Comments = lineComments
 			sd.Fields = append(sd.Fields, fd)
 		}
 
@@ -73,12 +77,12 @@ func ParseStructFileContent(content string) (sdList []StructDescription, prop Pr
 
 	return
 }
-func removeCommentPart(line string) string {
+func splitCommentPart(line string) (content, comments string) {
 	idx := strings.Index(line, "//")
 	if idx != -1 {
-		return strings.TrimSpace(line[:idx])
+		return strings.TrimSpace(line[:idx]), strings.TrimSpace(line[idx+2:])
 	}
-	return line
+	return line, ""
 }
 func removeEmptyLineAndCommentLine(lines []string) (newLines []string) {
 	newLines = make([]string, 0, len(lines))
