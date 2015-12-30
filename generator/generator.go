@@ -131,6 +131,78 @@ func (fd FieldDescriptoin) GetMysqlFieldName() string {
 	return fd.FieldName
 }
 
+func (fd FieldDescriptoin) GetFieldPosStr() string {
+
+	if fd.IsBool() {
+		return "%d"
+	}
+	if fd.IsNumber() {
+		return "%d"
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
+		return "%s"
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
+		return "%s"
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "int" {
+		return "%d"
+	}
+	if fd.FieldGoType == "string" {
+		return "'%s'"
+	}
+	// should be here
+	fmt.Println("should be here GetFieldPosStr")
+	return "%s"
+
+}
+
+func (fd FieldDescriptoin) GetFieldPosValue() string {
+	if fd.IsBool() {
+		return fmt.Sprintf("bool2int(this.%s)", fd.FieldName)
+	}
+
+	if fd.IsNumber() {
+		return fmt.Sprintf("this.%s", fd.FieldName)
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
+		return fmt.Sprintf("formatTime(this.%s)", fd.FieldName)
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
+		return fmt.Sprintf("formatTime(this.%s)", fd.FieldName)
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "int" {
+		return fmt.Sprintf("this.%s.Unix()", fd.FieldName)
+	}
+	if fd.FieldGoType == "string" {
+		return fmt.Sprintf("this.%s", fd.FieldName)
+	}
+	return ""
+
+	// if fd.IsBool() {
+	// 	return "%d"
+	// }
+	// if fd.IsNumber() {
+	// 	return "%d"
+	// }
+	// if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
+	// 	return "%s"
+	// }
+	// if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
+	// 	return "%s"
+	// }
+	// if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "int" {
+	// 	return "%d"
+	// }
+	// if fd.FieldGoType == "string" {
+	// 	return "'%s'"
+	// }
+	// // should be here
+	// fmt.Println("should be here GetFieldPosStr")
+	// return "%s"
+
+}
+
 type StructDescription struct {
 	StructName string
 	Fields     []FieldDescriptoin
@@ -152,7 +224,37 @@ func (sd StructDescription) GetPK() (pkList []string) {
 	return
 
 }
+func (sd StructDescription) GetPKFieldList() (pkList []FieldDescriptoin) {
+	for _, field := range sd.Fields {
+		if field.IsPK() {
+			pkList = append(pkList, field)
+		}
+	}
+	return
 
+}
+func (sd StructDescription) GetWherePosStr() (sql string) {
+	pkList := sd.GetPKFieldList()
+	for idx, field := range pkList {
+		sql += fmt.Sprintf("%s=%s", field.FieldName, field.GetFieldPosStr())
+		if idx != len(pkList)-1 {
+			sql += " and "
+
+		}
+	}
+	return
+}
+func (sd StructDescription) GetWherePosValue() (sql string) {
+	pkList := sd.GetPKFieldList()
+	for idx, field := range pkList {
+		sql += field.GetFieldPosValue()
+		if idx != len(pkList)-1 {
+			sql += " , "
+
+		}
+	}
+	return
+}
 func (sd StructDescription) GenerateCreateTableSql() (sql string, err error) {
 	if len(sd.Fields) == 0 {
 		return "", errors.New("no filed found ,generate create table sql error")
@@ -254,4 +356,44 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 	goCode += "    return\n"
 	goCode += "}\n"
 	return
+}
+
+func (sd StructDescription) GenerateUpdate() (goCode string) {
+	goCode += fmt.Sprintf("func (this %s) GetUpdateSql() (sql string) {\n", sd.StructName)
+	goCode += fmt.Sprintf("    if !this.IsDirty(){\n")
+	goCode += fmt.Sprintf("        return\n")
+	goCode += fmt.Sprintf("    }\n\n")
+	goCode += fmt.Sprintf("    if this.IsFlagNew(){\n")
+	goCode += fmt.Sprintf("        return\n")
+	goCode += fmt.Sprintf("    }\n\n")
+
+	goCode += fmt.Sprintf("    var isFirstField bool = true\n")
+	goCode += fmt.Sprintf("    var updateBuffer bytes.Buffer\n")
+
+	for _, field := range sd.Fields {
+		goCode += fmt.Sprintf("    if this.Is%sModified(){\n", Camelize(field.FieldName))
+		goCode += fmt.Sprintf("        if !isFirstField{\n")
+		goCode += fmt.Sprintf("            updateBuffer.WriteString(`,`)\n")
+		goCode += fmt.Sprintf("        }\n")
+		goCode += fmt.Sprintf("        isFirstField=false\n")
+		goCode += fmt.Sprintf("        updateBuffer.WriteString(fmt.Sprintf(`%s=%s`,%s))\n",
+			field.FieldName, field.GetFieldPosStr(), field.GetFieldPosValue())
+
+		goCode += "    }\n"
+
+		// if idx != len(sd.Fields)-1 {
+		// 	goCode += ","
+		// }
+	}
+
+	goCode += fmt.Sprintf("    sql=fmt.Sprintf(`update %s set %%s where %s`, updateBuffer.String(),%s)\n", sd.StructName, sd.GetWherePosStr(), sd.GetWherePosValue())
+	goCode += "    return\n"
+	goCode += "}\n"
+	return
+}
+func Camelize(s string) (ret string) {
+	if len(s) == 0 {
+		return s
+	}
+	return strings.ToUpper(s[0:1]) + s[1:]
 }
