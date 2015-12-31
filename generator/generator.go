@@ -7,53 +7,94 @@ import (
 )
 
 var DefaultMysqlTypeMap map[string]string = map[string]string{
-	"bool":      "tinyint",
-	"int":       "int",
-	"int8":      "tinyint",
-	"int16":     "smallint",
-	"int32":     "int",
-	"int64":     "bigint",
-	"uint8":     "tinyint unsigned",
-	"uint16":    "smallint unsigned",
-	"uint32":    "int unsigned",
-	"uint64":    "bigint unsigned",
-	"float32":   "float",
-	"float64":   "double",
-	"string":    "varchar(255)",
-	"time.Time": "timestamp",
+	"bool":              "tinyint",
+	"int":               "int",
+	"int8":              "tinyint",
+	"int16":             "smallint",
+	"int32":             "int",
+	"int64":             "bigint",
+	"uint8":             "tinyint unsigned",
+	"uint16":            "smallint unsigned",
+	"uint32":            "int unsigned",
+	"uint64":            "bigint unsigned",
+	"float32":           "float",
+	"float64":           "double",
+	"string":            "varchar(255)",
+	"time.Time":         "timestamp",
+	"[]int":             "varchar(255)",
+	"[]int32":           "varchar(255)",
+	"[]int8":            "varchar(255)",
+	"[]int16":           "varchar(255)",
+	"[]int64":           "varchar(255)",
+	"[]uint32":          "varchar(255)",
+	"[]uint8":           "varchar(255)",
+	"[]uint16":          "varchar(255)",
+	"[]uint64":          "varchar(255)",
+	"goutils.Int32List": "varchar(255)",
+	"goutils.Int16List": "varchar(255)",
+	"goutils.IntList":   "varchar(255)",
+	"goutils.Int8List":  "varchar(255)",
+	"key.KeyUint64":     "bigint",
+	"key.KeyInt":        "int",
+	"key.KeyInt32":      "int",
+	"key.String":        "varchar(255)",
+	"key.KeyString":     "varchar(255)",
 }
 var DefaultProtoBufTypeMap map[string]string = map[string]string{
-	"bool":      "bool",
-	"int":       "int32",
-	"int8":      "int32",
-	"int16":     "int32",
-	"int32":     "int32",
-	"int64":     "int64",
-	"uint8":     "uint32",
-	"uint16":    "uint32",
-	"uint32":    "uint32",
-	"uint64":    "uint64",
-	"float32":   "double",
-	"float64":   "double",
-	"string":    "string",
-	"time.Time": "int64",
+	"bool":          "bool",
+	"int":           "int32",
+	"int8":          "int32",
+	"int16":         "int32",
+	"int32":         "int32",
+	"int64":         "int64",
+	"uint8":         "uint32",
+	"uint16":        "uint32",
+	"uint32":        "uint32",
+	"uint64":        "uint64",
+	"float32":       "double",
+	"float64":       "double",
+	"string":        "string",
+	"time.Time":     "int64",
+	"key.KeyUint64": "uint64",
+	"key.KeyInt":    "int64",
+	"key.KeyInt32":  "int32",
+	"key.String":    "string",
+	"key.KeyString": "string",
 }
 
 var DefaultMysqlDefaultValueMap map[string]string = map[string]string{
-	"bool":      "0",
-	"int":       "0",
-	"int8":      "0",
-	"int16":     "0",
-	"int32":     "0",
-	"int64":     "0",
-	"uint8":     "0",
-	"uint16":    "0",
-	"uint32":    "0",
-	"uint64":    "0",
-	"float32":   "0",
-	"float64":   "0",
-	"string":    "''",
-	"time.Time": "0",
+	"bool":              "0",
+	"int":               "0",
+	"int8":              "0",
+	"int16":             "0",
+	"int32":             "0",
+	"int64":             "0",
+	"uint8":             "0",
+	"uint16":            "0",
+	"uint32":            "0",
+	"uint64":            "0",
+	"float32":           "0",
+	"float64":           "0",
+	"string":            "''",
+	"time.Time":         "0",
+	"[]int":             "''",
+	"[]int32":           "''",
+	"[]int8":            "''",
+	"[]int16":           "''",
+	"[]int64":           "''",
+	"[]uint32":          "''",
+	"[]uint8":           "''",
+	"[]uint16":          "''",
+	"[]uint64":          "''",
+	"goutils.Int32List": "''",
+	"goutils.Int16List": "''",
+	"goutils.IntList":   "''",
+	"goutils.Int8List":  "''",
+	"key.KeyUint64":     "0",
+	"key.KeyInt":        "0",
+	"key.KeyInt32":      "0",
+	"key.String":        "''",
+	"key.KeyString":     "''",
 }
 
 type Property struct {
@@ -72,6 +113,13 @@ func (fd FieldDescriptoin) IsString() bool {
 	if fd.FieldGoType == "string" {
 		return true
 	}
+	if fd.FieldGoType == "key.String" {
+		return true
+	}
+	if fd.FieldGoType == "key.KeyString" {
+		return true
+	}
+
 	return false
 
 }
@@ -84,7 +132,29 @@ func (fd FieldDescriptoin) IsInt() bool {
 		fd.FieldGoType == "uint8" ||
 		fd.FieldGoType == "uint16" ||
 		fd.FieldGoType == "uint32" ||
-		fd.FieldGoType == "uint64" {
+		fd.FieldGoType == "uint64" ||
+		fd.FieldGoType == "key.KeyUint64" ||
+		fd.FieldGoType == "key.KeyInt" ||
+		fd.FieldGoType == "key.KeyInt32" {
+		return true
+	}
+	return false
+}
+func (fd FieldDescriptoin) IsIntList() bool {
+	if fd.FieldGoType == "[]int" ||
+		fd.FieldGoType == "[]int8" ||
+		fd.FieldGoType == "[]int16" ||
+		fd.FieldGoType == "[]int32" ||
+		fd.FieldGoType == "[]int64" ||
+		fd.FieldGoType == "[]uint8" ||
+		fd.FieldGoType == "[]uint16" ||
+		fd.FieldGoType == "[]uint32" ||
+		fd.FieldGoType == "[]uint64" ||
+		fd.FieldGoType == "goutils.Int32List" ||
+		fd.FieldGoType == "goutils.Int16List" ||
+		fd.FieldGoType == "goutils.IntList" ||
+		fd.FieldGoType == "goutils.Int8List" {
+
 		return true
 	}
 	return false
@@ -108,6 +178,13 @@ func (fd FieldDescriptoin) IsNumber() bool {
 		return true
 	}
 	if fd.IsFloat() {
+		return true
+	}
+	return false
+}
+
+func (fd FieldDescriptoin) IsTimeInt() bool {
+	if fd.FieldGoType == "time.Time" && (fd.GetMysqlType() == "int" || fd.GetMysqlType() == "bigint") {
 		return true
 	}
 	return false
@@ -158,62 +235,129 @@ func (fd FieldDescriptoin) GetFieldPosStr() string {
 	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
 		return "%s"
 	}
-	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "int" {
+	if fd.IsTimeInt() {
 		return "%d"
 	}
 	if fd.FieldGoType == "string" {
 		return "'%s'"
 	}
+	if fd.IsIntList() {
+		return "'%s'"
+	}
+
 	// should be here
-	fmt.Println("should be here GetFieldPosStr")
+	fmt.Println("should be here GetFieldPosStr", fd.FieldName, fd.FieldGoType)
 	return "%s"
 
 }
 
+func (fd FieldDescriptoin) GetFieldPosValueWithoutPrefix() string {
+	s := fd.GetFieldPosValue()
+	s = strings.Replace(s, "e.", "", -1)
+	return s
+}
 func (fd FieldDescriptoin) GetFieldPosValue() string {
 	if fd.IsBool() {
-		return fmt.Sprintf("bool2int(this.%s)", fd.FieldName)
+		return fmt.Sprintf("bool2int(e.%s)", fd.FieldName)
 	}
 
 	if fd.IsNumber() {
-		return fmt.Sprintf("this.%s", fd.FieldName)
+		return fmt.Sprintf("e.%s", fd.FieldName)
 	}
 	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
-		return fmt.Sprintf("formatTime(this.%s)", fd.FieldName)
+		return fmt.Sprintf("formatTime(e.%s)", fd.FieldName)
 	}
 	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
-		return fmt.Sprintf("formatTime(this.%s)", fd.FieldName)
+		return fmt.Sprintf("formatTime(e.%s)", fd.FieldName)
 	}
-	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "int" {
-		return fmt.Sprintf("this.%s.Unix()", fd.FieldName)
+	if fd.IsTimeInt() {
+		return fmt.Sprintf("formatTimeUnix(e.%s)", fd.FieldName)
 	}
 	if fd.FieldGoType == "string" {
-		return fmt.Sprintf("this.%s", fd.FieldName)
+		return fmt.Sprintf("e.%s", fd.FieldName)
 	}
+	if fd.IsIntList() {
+		switch fd.FieldGoType {
+		case "[]int":
+			return fmt.Sprintf("intListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int8":
+			return fmt.Sprintf("int8ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int16":
+			return fmt.Sprintf("int16ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int32":
+			return fmt.Sprintf("int32ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int64":
+			return fmt.Sprintf("int64ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint8":
+			return fmt.Sprintf("uint8ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint16":
+			return fmt.Sprintf("uint16ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint32":
+			return fmt.Sprintf("uint32ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint64":
+			return fmt.Sprintf("uint64ListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.Int32List":
+			return fmt.Sprintf("int32ListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.Int16List":
+			return fmt.Sprintf("int16ListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.IntList":
+			return fmt.Sprintf("intListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.Int8List":
+			return fmt.Sprintf("int8ListJoin(e.%s, `,`)", fd.FieldName)
+		default:
+			fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
+		}
+	}
+
+	fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
+
 	return ""
+}
+func (fd FieldDescriptoin) GetFieldListPosValue() string {
+	if fd.IsString() {
+		switch fd.FieldGoType {
+		case "string":
+			return fmt.Sprintf(`sroundJoin(%ss,"'",",")`, fd.FieldName)
+		case "key.String":
+			return fmt.Sprintf(`sroundJoin2(%ss,"'",",")`, fd.FieldName)
+		case "key.KeyString":
+			return fmt.Sprintf(`sroundJoin2(%ss,"'",",")`, fd.FieldName)
+		}
+	}
+	if fd.IsInt() {
+		switch fd.FieldGoType {
+		case "int":
+			return fmt.Sprintf("intListJoin(%ss, `,`)", fd.FieldName)
+		case "int8":
+			return fmt.Sprintf("int8ListJoin(%ss, `,`)", fd.FieldName)
+		case "int16":
+			return fmt.Sprintf("int16ListJoin(%ss, `,`)", fd.FieldName)
+		case "int32":
+			return fmt.Sprintf("int32ListJoin(%ss, `,`)", fd.FieldName)
+		case "int64":
+			return fmt.Sprintf("int64ListJoin(%ss, `,`)", fd.FieldName)
+		case "uint8":
+			return fmt.Sprintf("uint8ListJoin(%ss, `,`)", fd.FieldName)
+		case "uint16":
+			return fmt.Sprintf("uint16ListJoin(%ss, `,`)", fd.FieldName)
+		case "uint32":
+			return fmt.Sprintf("uint32ListJoin(%ss, `,`)", fd.FieldName)
+		case "uint64":
+			return fmt.Sprintf("uint64ListJoin(%ss, `,`)", fd.FieldName)
+		case "key.KeyUint64":
+			return fmt.Sprintf("%ss.Join( `,`)", fd.FieldName)
+		case "key.KeyInt":
+			return fmt.Sprintf("%ss.Join( `,`)", fd.FieldName)
+		case "key.KeyInt32":
+			return fmt.Sprintf("%ss.Join( `,`)", fd.FieldName)
+		default:
+			fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
+		}
+	}
 
-	// if fd.IsBool() {
-	// 	return "%d"
-	// }
-	// if fd.IsNumber() {
-	// 	return "%d"
-	// }
-	// if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
-	// 	return "%s"
-	// }
-	// if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
-	// 	return "%s"
-	// }
-	// if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "int" {
-	// 	return "%d"
-	// }
-	// if fd.FieldGoType == "string" {
-	// 	return "'%s'"
-	// }
-	// // should be here
-	// fmt.Println("should be here GetFieldPosStr")
-	// return "%s"
+	fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
 
+	return ""
 }
 
 type StructDescription struct {
@@ -221,6 +365,18 @@ type StructDescription struct {
 	Fields     []FieldDescriptoin
 }
 
+func (sd StructDescription) GetSuggestMapName() string {
+	return fmt.Sprintf("%sMap", sd.StructName)
+}
+func (sd StructDescription) GetSuggestMapKey() string {
+	pkFieldList := sd.GetPKFieldList()
+	if len(pkFieldList) == 1 { // 一个主键的情况
+		return pkFieldList[0].FieldGoType
+	} else if len(pkFieldList) == 2 { // 两个主键的情况
+		return pkFieldList[1].FieldGoType
+	}
+	return ""
+}
 func (sd *StructDescription) Reset() {
 	sd.StructName = ""
 	sd.Fields = nil
@@ -246,6 +402,17 @@ func (sd StructDescription) GetPKFieldList() (pkList []FieldDescriptoin) {
 	return
 
 }
+func (sd StructDescription) GetWherePosStr2() (sql string) {
+	pkList := sd.GetPKFieldList()
+	for idx, field := range pkList {
+		sql += fmt.Sprintf("%s=?", field.GetMysqlFieldName())
+		if idx != len(pkList)-1 {
+			sql += " and "
+
+		}
+	}
+	return
+}
 func (sd StructDescription) GetWherePosStr() (sql string) {
 	pkList := sd.GetPKFieldList()
 	for idx, field := range pkList {
@@ -255,6 +422,11 @@ func (sd StructDescription) GetWherePosStr() (sql string) {
 
 		}
 	}
+	return
+}
+func (sd StructDescription) GetWherePosValueWithoutThisPrefix() (sql string) {
+	sql = sd.GetWherePosValue()
+	sql = strings.Replace(sql, "e.", "", -1)
 	return
 }
 func (sd StructDescription) GetWherePosValue() (sql string) {
@@ -291,7 +463,7 @@ func (sd StructDescription) GenerateCreateTableSql() (sql string, err error) {
 }
 
 func (sd StructDescription) GenerateCreateTableFunc() (goCode string) {
-	goCode += fmt.Sprintf("func (this %s) GetCreateTableSql() (sql string) {\n", sd.StructName)
+	goCode += fmt.Sprintf("func (e %s) GetCreateTableSql() (sql string) {\n", sd.StructName)
 	sql, _ := sd.GenerateCreateTableSql()
 	sql = strings.Replace(sql, "\n", "", -1)
 
@@ -301,116 +473,13 @@ func (sd StructDescription) GenerateCreateTableFunc() (goCode string) {
 	return
 }
 
-func (sd StructDescription) GenerateInsert() (goCode string) {
-	goCode += fmt.Sprintf("func (this %s) GetInsertSql() (sql string) {\n", sd.StructName)
-	goCode += fmt.Sprintf("    sql = fmt.Sprintf(\"insert into `%s`(", sd.GetMysqlTableName())
+func (sd StructDescription) JoinMysqlFieldNameList(sep string) (s string) {
 	for idx, field := range sd.Fields {
 		if idx != len(sd.Fields)-1 {
-			goCode += field.GetMysqlFieldName() + ","
+			s += field.GetMysqlFieldName() + ","
 		} else {
-			goCode += field.GetMysqlFieldName()
+			s += field.GetMysqlFieldName()
 		}
 	}
-	goCode += ") values ("
-	for idx, field := range sd.Fields {
-		if field.IsBool() {
-
-			goCode += "%d"
-		}
-		if field.IsNumber() {
-			goCode += "%d"
-		}
-		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "timestamp" {
-			goCode += "%s"
-		}
-		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "datetime" {
-			goCode += "%s"
-		}
-		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "int" {
-			goCode += "%d"
-		}
-		if field.FieldGoType == "string" {
-			goCode += "'%s'"
-		}
-
-		if idx != len(sd.Fields)-1 {
-			goCode += ","
-		}
-	}
-	goCode += ");\",\n"
-	for idx, field := range sd.Fields {
-		if field.IsBool() {
-			goCode += fmt.Sprintf("        bool2int(this.%s)", field.FieldName)
-		}
-
-		if field.IsNumber() {
-			goCode += fmt.Sprintf("        this.%s", field.FieldName)
-		}
-		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "timestamp" {
-			goCode += fmt.Sprintf("        formatTime(this.%s)", field.FieldName)
-		}
-		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "datetime" {
-			goCode += fmt.Sprintf("        formatTime(this.%s)", field.FieldName)
-		}
-		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "int" {
-			goCode += fmt.Sprintf("        this.%s.Unix()", field.FieldName)
-		}
-		if field.FieldGoType == "string" {
-			goCode += fmt.Sprintf("        this.%s", field.FieldName)
-		}
-
-		if idx != len(sd.Fields)-1 {
-			goCode += ",\n"
-		}
-	}
-
-	goCode += ")\n"
-
-	goCode += "    return\n"
-	goCode += "}\n"
 	return
-}
-
-func (sd StructDescription) GenerateUpdate() (goCode string) {
-	goCode += fmt.Sprintf("func (this %s) GetUpdateSql() (sql string) {\n", sd.StructName)
-	goCode += fmt.Sprintf("    if !this.IsFlagDirty(){\n")
-	goCode += fmt.Sprintf("        return\n")
-	goCode += fmt.Sprintf("    }\n\n")
-	goCode += fmt.Sprintf("    if this.IsFlagNew(){\n")
-	goCode += fmt.Sprintf("        return\n")
-	goCode += fmt.Sprintf("    }\n\n")
-
-	goCode += fmt.Sprintf("    var isFirstField bool = true\n")
-	goCode += fmt.Sprintf("    var updateBuffer bytes.Buffer\n")
-
-	for _, field := range sd.Fields {
-		if field.IsPK() {
-			continue
-		}
-
-		goCode += fmt.Sprintf("    if this.Is%sModified(){\n", Camelize(field.FieldName))
-		goCode += fmt.Sprintf("        if !isFirstField{\n")
-		goCode += fmt.Sprintf("            updateBuffer.WriteString(`,`)\n")
-		goCode += fmt.Sprintf("        }\n")
-		goCode += fmt.Sprintf("        isFirstField=false\n")
-		goCode += fmt.Sprintf("        updateBuffer.WriteString(fmt.Sprintf(`%s=%s`,%s))\n",
-			field.GetMysqlFieldName(), field.GetFieldPosStr(), field.GetFieldPosValue())
-
-		goCode += "    }\n"
-
-		// if idx != len(sd.Fields)-1 {
-		// 	goCode += ","
-		// }
-	}
-
-	goCode += fmt.Sprintf("    sql=fmt.Sprintf(`update %s set %%s where %s`, updateBuffer.String(),%s)\n", sd.StructName, sd.GetWherePosStr(), sd.GetWherePosValue())
-	goCode += "    return\n"
-	goCode += "}\n"
-	return
-}
-func Camelize(s string) (ret string) {
-	if len(s) == 0 {
-		return s
-	}
-	return strings.ToUpper(s[0:1]) + s[1:]
 }

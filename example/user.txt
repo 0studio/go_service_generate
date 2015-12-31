@@ -11,4 +11,15 @@ type User struct {
 	sex  bool
 	t    time.Time `mysql:"type=int"`
 	t2   time.Time
+	iList  []int
+	i2List  []int32
+	i3List  []int8
+	i4List  []int16
+	i5List  []int64
+	i6List  []uint32
+	i7List  []uint8
+	i8List  []uint16
+	i9List  []uint64 `mysql:"type=varchar(100)"`
+	i10List  goutils.IntList `mysql:"type=varchar(100)"`
+
 }

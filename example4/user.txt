@@ -1,0 +1,11 @@
+package user
+
+import (
+	"time"
+)
+
+type User4 struct {
+	id   string    `mysql:"pk,defalut='',type=varchar(100)"` // id
+	name string `mysql:"defalut='hello',name=helloName,type=varchar(10)"`
+
+}
