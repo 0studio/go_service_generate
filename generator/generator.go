@@ -68,6 +68,13 @@ type FieldDescriptoin struct {
 	Comments             string
 }
 
+func (fd FieldDescriptoin) IsString() bool {
+	if fd.FieldGoType == "string" {
+		return true
+	}
+	return false
+
+}
 func (fd FieldDescriptoin) IsInt() bool {
 	if fd.FieldGoType == "int" ||
 		fd.FieldGoType == "int8" ||
@@ -101,6 +108,12 @@ func (fd FieldDescriptoin) IsNumber() bool {
 		return true
 	}
 	if fd.IsFloat() {
+		return true
+	}
+	return false
+}
+func (fd FieldDescriptoin) IsEqualableType() bool {
+	if fd.IsNumber() || fd.IsBool() || fd.IsInt() || fd.IsString() {
 		return true
 	}
 	return false
@@ -236,7 +249,7 @@ func (sd StructDescription) GetPKFieldList() (pkList []FieldDescriptoin) {
 func (sd StructDescription) GetWherePosStr() (sql string) {
 	pkList := sd.GetPKFieldList()
 	for idx, field := range pkList {
-		sql += fmt.Sprintf("%s=%s", field.FieldName, field.GetFieldPosStr())
+		sql += fmt.Sprintf("%s=%s", field.GetMysqlFieldName(), field.GetFieldPosStr())
 		if idx != len(pkList)-1 {
 			sql += " and "
 
@@ -360,7 +373,7 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 
 func (sd StructDescription) GenerateUpdate() (goCode string) {
 	goCode += fmt.Sprintf("func (this %s) GetUpdateSql() (sql string) {\n", sd.StructName)
-	goCode += fmt.Sprintf("    if !this.IsDirty(){\n")
+	goCode += fmt.Sprintf("    if !this.IsFlagDirty(){\n")
 	goCode += fmt.Sprintf("        return\n")
 	goCode += fmt.Sprintf("    }\n\n")
 	goCode += fmt.Sprintf("    if this.IsFlagNew(){\n")
@@ -371,13 +384,17 @@ func (sd StructDescription) GenerateUpdate() (goCode string) {
 	goCode += fmt.Sprintf("    var updateBuffer bytes.Buffer\n")
 
 	for _, field := range sd.Fields {
+		if field.IsPK() {
+			continue
+		}
+
 		goCode += fmt.Sprintf("    if this.Is%sModified(){\n", Camelize(field.FieldName))
 		goCode += fmt.Sprintf("        if !isFirstField{\n")
 		goCode += fmt.Sprintf("            updateBuffer.WriteString(`,`)\n")
 		goCode += fmt.Sprintf("        }\n")
 		goCode += fmt.Sprintf("        isFirstField=false\n")
 		goCode += fmt.Sprintf("        updateBuffer.WriteString(fmt.Sprintf(`%s=%s`,%s))\n",
-			field.FieldName, field.GetFieldPosStr(), field.GetFieldPosValue())
+			field.GetMysqlFieldName(), field.GetFieldPosStr(), field.GetFieldPosValue())
 
 		goCode += "    }\n"
 

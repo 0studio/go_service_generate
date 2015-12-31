@@ -67,13 +67,13 @@ func generateEntity(structDescriptionList []generator.StructDescription, propert
 		// 生成结构体
 		outputF.WriteString(fmt.Sprintf("type %s struct{\n", sd.StructName))
 		if len(sd.Fields) < 8 {
-			outputF.WriteString("    Flag            bit.BitInt8\n")
+			outputF.WriteString("    flag            bit.BitInt8\n")
 		} else if len(sd.Fields) < 16 {
-			outputF.WriteString("    Flag            bit.BitInt16\n")
+			outputF.WriteString("    flag            bit.BitInt16\n")
 		} else if len(sd.Fields) < 32 {
-			outputF.WriteString("    Flag            bit.BitInt32\n")
+			outputF.WriteString("    flag            bit.BitInt32\n")
 		} else {
-			outputF.WriteString("    Flag            bit.BitInt64\n")
+			outputF.WriteString("    flag            bit.BitInt64\n")
 		}
 
 		for _, field := range sd.Fields {
@@ -90,28 +90,43 @@ func generateEntity(structDescriptionList []generator.StructDescription, propert
 		outputF.WriteString("}\n")
 
 		// 生成setter getter
-		for idx, field := range sd.Fields {
+		var flagPos int = 0
+		for _, field := range sd.Fields {
 			outputF.WriteString(fmt.Sprintf("func(this *%s) Set%s(value %s) {\n", sd.StructName, generator.Camelize(field.FieldName), field.FieldGoType))
-			outputF.WriteString(fmt.Sprintf("    this.%s = value\n", field.FieldName))
-			outputF.WriteString(fmt.Sprintf("    this.Flag.SetFlag(%d)\n", idx))
+			if field.IsEqualableType() {
+				outputF.WriteString(fmt.Sprintf("    if this.%s != value {\n", field.FieldName))
+				outputF.WriteString(fmt.Sprintf("        this.%s = value\n", field.FieldName))
+				if !field.IsPK() {
+					outputF.WriteString(fmt.Sprintf("        this.flag.SetFlag(%d)\n", flagPos))
+				}
+				outputF.WriteString("    }\n")
+			} else {
+				outputF.WriteString(fmt.Sprintf("    this.%s = value\n", field.FieldName))
+				if !field.IsPK() {
+					outputF.WriteString(fmt.Sprintf("    this.flag.SetFlag(%d)\n", flagPos))
+				}
+			}
 
 			outputF.WriteString("}\n")
 			outputF.WriteString(fmt.Sprintf("func(this %s) Get%s()(value %s) {\n", sd.StructName, generator.Camelize(field.FieldName), field.FieldGoType))
 			outputF.WriteString(fmt.Sprintf("    return this.%s\n", field.FieldName))
 			outputF.WriteString("}\n")
-			outputF.WriteString(fmt.Sprintf("func(this %s) Is%sModified()bool {\n", sd.StructName, generator.Camelize(field.FieldName)))
-			outputF.WriteString(fmt.Sprintf("    return this.Flag.IsPosTrue(%d)\n", idx))
-			outputF.WriteString("}\n")
+			if !field.IsPK() {
+				outputF.WriteString(fmt.Sprintf("func(this %s) Is%sModified() bool {\n", sd.StructName, generator.Camelize(field.FieldName)))
+				outputF.WriteString(fmt.Sprintf("    return this.flag.IsPosTrue(%d)\n", flagPos))
+				outputF.WriteString("}\n")
+				flagPos++
+			}
 		}
-		outputF.WriteString(fmt.Sprintf("func(this %s) IsDirty()bool {\n", sd.StructName))
-		outputF.WriteString(fmt.Sprintf("    return this.Flag!=0\n"))
+		outputF.WriteString(fmt.Sprintf("func(this %s) IsFlagDirty() bool {\n", sd.StructName))
+		outputF.WriteString(fmt.Sprintf("    return this.flag!=0\n"))
 		outputF.WriteString("}\n")
 		outputF.WriteString(fmt.Sprintf("func(this %s) ClearFlag() {\n", sd.StructName))
-		outputF.WriteString(fmt.Sprintf("    this.Flag=0\n"))
+		outputF.WriteString(fmt.Sprintf("    this.flag=0\n"))
 		outputF.WriteString("}\n")
 
-		outputF.WriteString(fmt.Sprintf("func(this %s) IsFlagNew()bool {\n", sd.StructName))
-		outputF.WriteString(fmt.Sprintf("    return this.Flag.IsPosTrue(%d)\n", len(sd.Fields)))
+		outputF.WriteString(fmt.Sprintf("func(this %s) IsFlagNew() bool {\n", sd.StructName))
+		outputF.WriteString(fmt.Sprintf("    return this.flag.IsPosTrue(%d)\n", len(sd.Fields)))
 		outputF.WriteString("}\n")
 
 		outputF.WriteString(sd.GenerateInsert())
