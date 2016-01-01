@@ -8,7 +8,7 @@ import (
 )
 
 func (sd StructDescription) GenerateDBStorage(property Property, srcDir string) {
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("db_storage_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("storage_db_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -450,7 +450,7 @@ func (sd StructDescription) GenerateDBDelete() string {
 
 	s :=
 		fmt.Sprintf(
-			`func (this *%s) Delete(%s, now time.Time) (ok bool) {
+			`func (this *%s) Delete(%s) (ok bool) {
 	sql := "delete from %s where %s "
 	var err error
 	err = this.DatabaseTemplate.Exec(%s, sql,%s)
@@ -490,7 +490,7 @@ func (sd StructDescription) GenerateDBMultDelete() string {
 
 		s :=
 			fmt.Sprintf(
-				`func (this *%s) MultiDelete(%s %s,%ss %s, now time.Time) (ok bool) {
+				`func (this *%s) MultiDelete(%s %s,%ss %s) (ok bool) {
 	sql := fmt.Sprintf("delete from %s where %s=%s and %s in (%%s)", %s,%s)
 	var err error
 	 err = this.DatabaseTemplate.Exec(%s, sql)
@@ -521,7 +521,7 @@ func (sd StructDescription) GenerateDBMultDelete() string {
 
 		s :=
 			fmt.Sprintf(
-				`func (this *%s) MultiDelete(%ss %s, now time.Time) (ok bool) {
+				`func (this *%s) MultiDelete(%ss %s) (ok bool) {
 	sql := fmt.Sprintf("delete from %s where %s in (%%s)",%s)
 	var err error
 	err = this.DatabaseTemplate.Exec(%s, sql)

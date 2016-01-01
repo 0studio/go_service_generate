@@ -12,7 +12,7 @@ func (sd StructDescription) generateLRUCache1PK(pkField FieldDescriptoin, proper
 	if lruCacheType == "" {
 		return false
 	}
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("lru_cache_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("storage_lru_cache_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return false

@@ -23,3 +23,11 @@
 /example2/lru_cache_stub.go
 /example3/lru_cache_stub.go
 /example4/lru_cache_stub.go
+/example/storage_db_stub.go
+/example/storage_lru_cache_stub.go
+/example2/storage_db_stub.go
+/example2/storage_lru_cache_stub.go
+/example3/storage_db_stub.go
+/example3/storage_lru_cache_stub.go
+/example4/storage_db_stub.go
+/example4/storage_lru_cache_stub.go

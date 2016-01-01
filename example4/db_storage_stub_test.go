@@ -58,7 +58,7 @@ func TestDBUser4Storage(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, uRet.GetName(), u.GetName())
 
-	ok = store.Delete(u.GetId(), now)
+	ok = store.Delete(u.GetId())
 	assert.True(t, ok)
 
 	uRet, ok = store.Get(u.GetId(), now)
@@ -88,7 +88,7 @@ func TestDBUser4StorageMulti(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(uMapRet))
 
-	ok = store.MultiDelete([]string{uin, uin2}, now)
+	ok = store.MultiDelete([]string{uin, uin2})
 	assert.True(t, ok)
 	// after delete
 	uMapRet, ok = store.MultiGet([]string{uin, uin2}, now)
