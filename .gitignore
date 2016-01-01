@@ -19,3 +19,7 @@
 /example2/db_storage_stub.go
 /example2/user_create_table.sql
 /example2/utils_stub.go
+/example/lru_cache_stub.go
+/example2/lru_cache_stub.go
+/example3/lru_cache_stub.go
+/example4/lru_cache_stub.go
