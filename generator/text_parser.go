@@ -60,6 +60,7 @@ func ParseStructFileContent(content string) (sdList []StructDescription, prop Pr
 				fd.TagString = line[tagStartIdx+1 : tagEndIdx]
 				fd.MysqlTagFieldList = parseTag(reflect.StructTag(fd.TagString).Get("mysql"))
 				fd.ProtoBufTagFieldList = parseTag(reflect.StructTag(fd.TagString).Get("pb"))
+				fd.GoTagFieldList = parseTag(reflect.StructTag(fd.TagString).Get("go"))
 
 				line = line[:tagStartIdx]
 			}

@@ -105,6 +105,7 @@ type FieldDescriptoin struct {
 	FieldGoType          string
 	TagString            string
 	MysqlTagFieldList    TagFieldList
+	GoTagFieldList       TagFieldList
 	ProtoBufTagFieldList TagFieldList
 	Comments             string
 }
@@ -220,7 +221,13 @@ func (fd FieldDescriptoin) GetMysqlFieldName() string {
 	}
 	return fd.FieldName
 }
-
+func (fd FieldDescriptoin) GetGoDefalutValue() string {
+	mysqlDefault := fd.GoTagFieldList.GetValue("default")
+	if mysqlDefault != "" {
+		return mysqlDefault
+	}
+	return ""
+}
 func (fd FieldDescriptoin) GetFieldPosStr() string {
 
 	if fd.IsBool() {

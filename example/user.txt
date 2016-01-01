@@ -7,7 +7,7 @@ import (
 type User struct {
 	id   int    `mysql:"pk,defalut=1,type=bigint"` // id
 	name string `mysql:"pk,defalut='hello',name=helloName,type=varchar(10)"`
-	age  int
+	age  int `go:"default=11"`
 	sex  bool
 	t    time.Time `mysql:"type=int"`
 	t2   time.Time

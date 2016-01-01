@@ -7,9 +7,6 @@ import (
 	"strings"
 )
 
-func (structDescription StructDescription) generateEntityMap(property Property) (s string) {
-	return fmt.Sprintf("type %s map[%s]%s\n\n", structDescription.GetSuggestMapName(), structDescription.GetSuggestMapKey(), structDescription.StructName)
-}
 func (sd StructDescription) GenerateEntity(property Property, srcDir string) {
 	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("entity_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
@@ -65,7 +62,8 @@ var ___importKey key.KeyUint64
 	outputF.WriteString("}\n\n")
 	outputF.WriteString(fmt.Sprintf("type %sList []%s\n\n", sd.StructName, sd.StructName))
 
-	outputF.WriteString(sd.generateEntityMap(property))
+	outputF.WriteString(sd.generateEntityMap())
+	outputF.WriteString(sd.generateNewEntity())
 
 	// 生成setter getter
 	var flagPos int = 0
@@ -120,6 +118,33 @@ var ___importKey key.KeyUint64
 	// }
 
 }
+func (sd StructDescription) generateNewEntity() (s string) {
+	var fields string
+	for _, fd := range sd.Fields {
+		if fd.IsPK() {
+			fields += "        " + fd.FieldName + ":" + fd.FieldName + ",\n"
+		} else {
+			if fd.GetGoDefalutValue() != "" {
+				fields += "        " + fd.FieldName + ":" + fd.GetGoDefalutValue() + ",\n"
+			}
+		}
+	}
+	s = fmt.Sprintf(
+		`func New%s(%s) (e %s) {
+    e = %s{
+%s
+    }
+    return
+}
+`, sd.StructName, sd.GetPKVarDeclear(), sd.StructName,
+		sd.StructName,
+		fields)
+	return
+}
+func (sd StructDescription) generateEntityMap() (s string) {
+	return fmt.Sprintf("type %s map[%s]%s\n\n", sd.GetSuggestMapName(), sd.GetSuggestMapKey(), sd.StructName)
+}
+
 func makeString(s string, n int) (r string) {
 	for i := 0; i < n; i++ {
 		r += s
