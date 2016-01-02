@@ -3,9 +3,6 @@ package user
 // this Test file here for making sure the generated file is working as expected
 
 import (
-	"database/sql"
-	"fmt"
-	"github.com/0studio/databasetemplate"
 	"github.com/0studio/logger"
 	key "github.com/0studio/storage_key"
 	"github.com/dropbox/godropbox/memcache"
@@ -14,39 +11,17 @@ import (
 	"time"
 )
 
-// GRANT ALL PRIVILEGES ON *.* TO 'th_dev'@'127.0.0.1'     IDENTIFIED BY 'th_devpass' WITH GRANT OPTION;
-
-func getMockDB() (dt databasetemplate.DatabaseTemplate) {
-	var ok bool
-	db1, ok := databasetemplate.NewDBInstance(
-		databasetemplate.DBConfig{
-			Host: "127.0.0.1",
-			User: "th_dev",
-			Pass: "th_devpass",
-			Name: "test",
-		}, true)
-	if !ok {
-		fmt.Println("initmock_databasetemplate_fail")
-	}
-	dt = databasetemplate.NewDatabaseTemplateSharding([]*sql.DB{db1})
-
-	return
-}
-
-func TestDBUser2Storage(t *testing.T) {
+func TestProxyUser2Storage(t *testing.T) {
 	now := time.Now()
-	a := NewStorageProxy(NewDBUser2Storage(getMockDB(), nil, true), NewLRULocalUser2Storage(1, 10))
-	c := NewStorageProxy(a, NewMCUser2Storage(memcache.NewMockClient(), 1, "user2"))
-	fmt.Println(c)
-
-	fmt.Println(a)
 
 	u := User2{}
 	u.SetId(1)
 	u.SetName("hello")
 	u.SetAge(11)
 
-	store := NewDBUser2Storage(getMockDB(), logger.NewStdoutLogger(), true)
+	mc := NewMCUser2Storage(memcache.NewMockClient(), 10, "user2")
+	p1 := NewStorageProxy(NewLRULocalUser2Storage(1, 10), mc)
+	store := NewStorageProxy(p1, NewDBUser2Storage(getMockDB(), logger.NewStdoutLogger(), true))
 
 	ok := store.Add(&u, now)
 	assert.True(t, ok)
@@ -78,7 +53,7 @@ func TestDBUser2Storage(t *testing.T) {
 	assert.False(t, ok)
 }
 
-func TestDBUser2StorageMulti(t *testing.T) {
+func TestProxyCacheUser2StorageMulti(t *testing.T) {
 	now := time.Now()
 	var uin key.KeyUint64 = 1
 	var uin2 key.KeyUint64 = 2
@@ -94,7 +69,9 @@ func TestDBUser2StorageMulti(t *testing.T) {
 	uMap[u.GetId()] = u
 	uMap[u2.GetId()] = u2
 
-	store := NewDBUser2Storage(getMockDB(), logger.NewStdoutLogger(), true)
+	mc := NewMCUser2Storage(memcache.NewMockClient(), 10, "user2")
+	p1 := NewStorageProxy(NewLRULocalUser2Storage(1, 10), mc)
+	store := NewStorageProxy(p1, NewDBUser2Storage(getMockDB(), logger.NewStdoutLogger(), true))
 
 	ok := store.MultiAdd(uMap, now)
 	assert.True(t, ok)
