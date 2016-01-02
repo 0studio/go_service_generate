@@ -49,8 +49,8 @@ var __importKeyP key.KeyUint64
 var __importGoutils goutils.Int32List
 
 type __Entity__Storage interface {
-	SetIdListByUin(__PK1FieldName__ __PK1Type__, __PK2FieldName__List *__PK2TypeList__, now time.Time) (ok bool)
-	GetIdListByUin(__PK1FieldName__ __PK1Type__, now time.Time) (__PK2FieldName__List __PK2TypeList__, ok bool)
+	SetIdListByPK1(__PK1FieldName__ __PK1Type__, __PK2FieldName__List *__PK2TypeList__, now time.Time) (ok bool)
+	GetIdListByPK1(__PK1FieldName__ __PK1Type__, now time.Time) (__PK2FieldName__List __PK2TypeList__, ok bool)
 	Get(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__, now time.Time) (e __Entity__, ok bool)
 	Set(e *__Entity__, now time.Time) (ok bool)
 	Add(e *__Entity__, now time.Time) (ok bool)
@@ -178,28 +178,28 @@ func (this __Entity__StorageProxy) MultiDelete(__PK1FieldName__ __PK1Type__, __P
 	return
 }
 
-func (this __Entity__StorageProxy) GetIdListByUin(__PK1FieldName__ __PK1Type__, now time.Time) (idlist __PK2TypeList__, ok bool) {
-	idlist, ok = this.preferedStorage.GetIdListByUin(__PK1FieldName__, now)
+func (this __Entity__StorageProxy) GetIdListByPK1(__PK1FieldName__ __PK1Type__, now time.Time) (idlist __PK2TypeList__, ok bool) {
+	idlist, ok = this.preferedStorage.GetIdListByPK1(__PK1FieldName__, now)
 	if ok {
 		return
 	}
-	idlist, ok = this.backupStorage.GetIdListByUin(__PK1FieldName__, now)
+	idlist, ok = this.backupStorage.GetIdListByPK1(__PK1FieldName__, now)
 	if ok {
-		this.preferedStorage.SetIdListByUin(__PK1FieldName__, &idlist, now)
+		this.preferedStorage.SetIdListByPK1(__PK1FieldName__, &idlist, now)
 	}
 	return
 }
 
-func (this __Entity__StorageProxy) SetIdListByUin(__PK1FieldName__ __PK1Type__, __PK2FieldName__List *__PK2TypeList__, now time.Time) (ok bool) {
+func (this __Entity__StorageProxy) SetIdListByPK1(__PK1FieldName__ __PK1Type__, __PK2FieldName__List *__PK2TypeList__, now time.Time) (ok bool) {
 	if len(*__PK2FieldName__List) == 0 {
 		return
 	}
-	ok = this.backupStorage.SetIdListByUin(__PK1FieldName__, __PK2FieldName__List, now)
+	ok = this.backupStorage.SetIdListByPK1(__PK1FieldName__, __PK2FieldName__List, now)
 	if !ok {
-		this.preferedStorage.SetIdListByUin(__PK1FieldName__, __PK2FieldName__List, now)
+		this.preferedStorage.SetIdListByPK1(__PK1FieldName__, __PK2FieldName__List, now)
 		return ok
 	}
-	ok = this.preferedStorage.SetIdListByUin(__PK1FieldName__, __PK2FieldName__List, now)
+	ok = this.preferedStorage.SetIdListByPK1(__PK1FieldName__, __PK2FieldName__List, now)
 	return
 }
 `

@@ -47,6 +47,7 @@ var ___importGoutilsDB goutils.Int32List
 	outputF.WriteString(sd.GenerateDBDelete())
 	outputF.WriteString(sd.GenerateDBMultDelete())
 	outputF.WriteString(sd.GenerateDBGetIdList())
+	outputF.WriteString(sd.GenerateDBsetIdList())
 
 }
 func (sd StructDescription) GenerateDBStorageStruct() string {
@@ -431,8 +432,23 @@ func (sd StructDescription) GenerateDBMultGet() string {
 }
 
 func (sd StructDescription) GenerateDBMultUpdate() string {
-	s :=
-		fmt.Sprintf(
+	pkList := sd.GetPKFieldList()
+	if len(pkList) == 2 {
+		s := fmt.Sprintf(
+			`func (this *%s) MultiUpdate(%s %s,eMap %s, now time.Time) (ok bool) {
+	for k, e := range eMap {
+		this.Set(&e, now)
+		eMap[k] = e
+	}
+	return true
+}
+`, sd.GetDBStorageName(), pkList[0].FieldName, pkList[0].FieldGoType,
+			sd.GetSuggestMapName())
+		return s
+
+	} else if len(pkList) == 1 {
+
+		s := fmt.Sprintf(
 			`func (this *%s) MultiUpdate(eMap %s, now time.Time) (ok bool) {
 	for k, e := range eMap {
 		this.Set(&e, now)
@@ -440,9 +456,11 @@ func (sd StructDescription) GenerateDBMultUpdate() string {
 	}
 	return true
 }
-`, sd.GetDBStorageName(), sd.GetSuggestMapName())
-	return s
-
+`, sd.GetDBStorageName(),
+			sd.GetSuggestMapName())
+		return s
+	}
+	return ""
 }
 func (sd StructDescription) GenerateDBDelete() string {
 	pkList := sd.GetPKFieldList()
@@ -602,6 +620,29 @@ func (this *%s) GetIdListByPK1(%s %s, now time.Time) (idList %s, ok bool) {
 			multKey,
 			pkList[1].FieldGoType,
 		)
+	return s
+
+}
+func (sd StructDescription) GenerateDBsetIdList() string {
+	var multKey string
+	pkList := sd.GetPKFieldList()
+	if len(pkList) != 2 {
+		return ""
+	}
+
+	if isTypeKeySum(pkList[0].FieldGoType) {
+		multKey = fmt.Sprintf("%sList", pkList[1].FieldGoType)
+	} else {
+		multKey = fmt.Sprintf("[]%s", pkList[1].FieldGoType)
+	}
+
+	s :=
+		fmt.Sprintf(
+			`
+func (this *%s) SetIdListByPK1(%s %s, idList *%s,now time.Time) (ok bool) {
+	return true
+}
+`, sd.GetDBStorageName(), pkList[0].FieldName, pkList[0].FieldGoType, multKey)
 	return s
 
 }

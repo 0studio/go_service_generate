@@ -153,7 +153,7 @@ func (m LRULocal__Entity__Storage) del(__PK1FieldName__ __PK1Type__, now time.Ti
 	m.cache.Delete(__PK1FieldName__)
 	return true
 }
-func (m LRULocal__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__, now time.Time) (ok bool) {
+func (m LRULocal__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__) (ok bool) {
 	sm := m.getMap(__PK1FieldName__)
 	if sm == nil {
 		return true
@@ -162,19 +162,19 @@ func (m LRULocal__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2Fie
 
 	return true
 }
-func (m LRULocal__Entity__Storage) MultiDelete(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__, now time.Time) (ok bool) {
+func (m LRULocal__Entity__Storage) MultiDelete(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__) (ok bool) {
 	for _, __PK2FieldName__ := range keys {
-		m.Delete(__PK1FieldName__, __PK2FieldName__, now)
+		m.Delete(__PK1FieldName__, __PK2FieldName__)
 	}
 	return true
 }
 
-func (m LRULocal__Entity__Storage) SetIdListByUin(__PK1FieldName__ __PK1Type__, idList *__PK2TypeList__, now time.Time) bool {
+func (m LRULocal__Entity__Storage) SetIdListByPK1(__PK1FieldName__ __PK1Type__, idList *__PK2TypeList__, now time.Time) bool {
 	m.cacheList.Set(__PK1FieldName__, *idList)
 	return true
 }
 
-func (m LRULocal__Entity__Storage) GetIdListByUin(__PK1FieldName__ __PK1Type__, now time.Time) (list __PK2TypeList__, ok bool) {
+func (m LRULocal__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__, now time.Time) (list __PK2TypeList__, ok bool) {
 	cacheObj, ok := m.cacheList.Get(__PK1FieldName__)
 	if !ok {
 		return
@@ -182,7 +182,7 @@ func (m LRULocal__Entity__Storage) GetIdListByUin(__PK1FieldName__ __PK1Type__, 
 	list = cacheObj.(__PK2TypeList__)
 	return nil, false
 }
-func (m LRULocal__Entity__Storage) DeleteIdListByUin(__PK1FieldName__ __PK1Type__) (ok bool) {
+func (m LRULocal__Entity__Storage) DeleteIdListByPK1(__PK1FieldName__ __PK1Type__) (ok bool) {
 	m.cacheList.Delete(__PK1FieldName__)
 	return true
 }
