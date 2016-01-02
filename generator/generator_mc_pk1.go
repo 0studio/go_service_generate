@@ -49,7 +49,7 @@ func (sd StructDescription) generateMCPK1(pkField FieldDescriptoin, property Pro
 
 	var pkFromString string
 	if pkField.FieldGoType == "string" {
-		pkFromString = "k"
+		pkFromString = "k=token"
 	} else {
 		pkFromString = "k.FromString(token)"
 	}
@@ -77,6 +77,7 @@ import (
 	"strings"
 	"time"
 )
+var __importKeyMC key.KeyUint64
 
 type MC__Entity__Storage struct {
 	expireSeconds uint32
@@ -84,7 +85,7 @@ type MC__Entity__Storage struct {
 	client        memcache.Client
 }
 
-func NewMCUserStorage(client memcache.Client, expireSeconds uint32, prefix string) MC__Entity__Storage {
+func NewMC__Entity__Storage(client memcache.Client, expireSeconds uint32, prefix string) MC__Entity__Storage {
 	return MC__Entity__Storage{expireSeconds: expireSeconds, prefix: prefix, client: client}
 }
 

@@ -11,7 +11,7 @@ type User struct {
 	sex  bool
 	t    time.Time `mysql:"type=int"`
 	t2   time.Time
-	iList  []int
+	iList  []int `pb:"type=int32,repeated"`
 	i2List  []int32
 	i3List  []int8
 	i4List  []int16

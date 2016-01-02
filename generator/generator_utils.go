@@ -251,6 +251,612 @@ func join(list []string, sep string) string {
 	return strings.Join(list,sep)
 }
 
+func intList2intList(in []int) (out []int) {
+    return in
+}
+func intList2int64List(in []int) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func intList2int32List(in []int) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func intList2int16List(in []int) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func intList2int8List(in []int) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func intList2uint64List(in []int) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func intList2uint32List(in []int) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func intList2uint16List(in []int) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func intList2uint8List(in []int) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func int64List2intList(in []int64) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func int64List2int64List(in []int64) (out []int64) {
+    return in
+}
+func int64List2int32List(in []int64) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func int64List2int16List(in []int64) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func int64List2int8List(in []int64) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func int64List2uint64List(in []int64) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func int64List2uint32List(in []int64) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func int64List2uint16List(in []int64) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func int64List2uint8List(in []int64) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func int32List2intList(in []int32) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func int32List2int64List(in []int32) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func int32List2int32List(in []int32) (out []int32) {
+    return in
+}
+func int32List2int16List(in []int32) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func int32List2int8List(in []int32) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func int32List2uint64List(in []int32) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func int32List2uint32List(in []int32) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func int32List2uint16List(in []int32) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func int32List2uint8List(in []int32) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func int16List2intList(in []int16) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func int16List2int64List(in []int16) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func int16List2int32List(in []int16) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func int16List2int16List(in []int16) (out []int16) {
+    return in
+}
+func int16List2int8List(in []int16) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func int16List2uint64List(in []int16) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func int16List2uint32List(in []int16) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func int16List2uint16List(in []int16) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func int16List2uint8List(in []int16) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func int8List2intList(in []int8) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func int8List2int64List(in []int8) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func int8List2int32List(in []int8) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func int8List2int16List(in []int8) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func int8List2int8List(in []int8) (out []int8) {
+    return in
+}
+func int8List2uint64List(in []int8) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func int8List2uint32List(in []int8) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func int8List2uint16List(in []int8) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func int8List2uint8List(in []int8) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func uint64List2intList(in []uint64) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func uint64List2int64List(in []uint64) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func uint64List2int32List(in []uint64) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func uint64List2int16List(in []uint64) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func uint64List2int8List(in []uint64) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func uint64List2uint64List(in []uint64) (out []uint64) {
+    return in
+}
+func uint64List2uint32List(in []uint64) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func uint64List2uint16List(in []uint64) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func uint64List2uint8List(in []uint64) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func uint32List2intList(in []uint32) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func uint32List2int64List(in []uint32) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func uint32List2int32List(in []uint32) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func uint32List2int16List(in []uint32) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func uint32List2int8List(in []uint32) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func uint32List2uint64List(in []uint32) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func uint32List2uint32List(in []uint32) (out []uint32) {
+    return in
+}
+func uint32List2uint16List(in []uint32) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func uint32List2uint8List(in []uint32) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func uint16List2intList(in []uint16) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func uint16List2int64List(in []uint16) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func uint16List2int32List(in []uint16) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func uint16List2int16List(in []uint16) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func uint16List2int8List(in []uint16) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func uint16List2uint64List(in []uint16) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func uint16List2uint32List(in []uint16) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func uint16List2uint16List(in []uint16) (out []uint16) {
+    return in
+}
+func uint16List2uint8List(in []uint16) (out []uint8) {
+	out = make([]uint8, len(in))
+	for idx, v := range in {
+		out[idx] = uint8(v)
+	}
+	return
+}
+func uint8List2intList(in []uint8) (out []int) {
+	out = make([]int, len(in))
+	for idx, v := range in {
+		out[idx] = int(v)
+	}
+	return
+}
+func uint8List2int64List(in []uint8) (out []int64) {
+	out = make([]int64, len(in))
+	for idx, v := range in {
+		out[idx] = int64(v)
+	}
+	return
+}
+func uint8List2int32List(in []uint8) (out []int32) {
+	out = make([]int32, len(in))
+	for idx, v := range in {
+		out[idx] = int32(v)
+	}
+	return
+}
+func uint8List2int16List(in []uint8) (out []int16) {
+	out = make([]int16, len(in))
+	for idx, v := range in {
+		out[idx] = int16(v)
+	}
+	return
+}
+func uint8List2int8List(in []uint8) (out []int8) {
+	out = make([]int8, len(in))
+	for idx, v := range in {
+		out[idx] = int8(v)
+	}
+	return
+}
+func uint8List2uint64List(in []uint8) (out []uint64) {
+	out = make([]uint64, len(in))
+	for idx, v := range in {
+		out[idx] = uint64(v)
+	}
+	return
+}
+func uint8List2uint32List(in []uint8) (out []uint32) {
+	out = make([]uint32, len(in))
+	for idx, v := range in {
+		out[idx] = uint32(v)
+	}
+	return
+}
+func uint8List2uint16List(in []uint8) (out []uint16) {
+	out = make([]uint16, len(in))
+	for idx, v := range in {
+		out[idx] = uint16(v)
+	}
+	return
+}
+func uint8List2uint8List(in []uint8) (out []uint8) {
+    return in
+}
+
+
+func str2uint64(s string) (out uint64) {
+	v, _ := strconv.ParseUint(s, 10, 0)
+	return uint64(v)
+}
+func str2uint32(s string) (out uint32) {
+	v, _ := strconv.ParseUint(s, 10, 0)
+	return uint32(v)
+}
+func str2uint16(s string) (out uint16) {
+	v, _ := strconv.ParseUint(s, 10, 0)
+	return uint16(v)
+}
+func str2uint8(s string) (out uint8) {
+	v, _ := strconv.ParseUint(s, 10, 0)
+	return uint8(v)
+}
+func str2int(s string) (out int) {
+	v, _ := strconv.ParseInt(s, 10, 0)
+	return int(v)
+}
+func str2int64(s string) (out int64) {
+	v, _ := strconv.ParseInt(s, 10, 0)
+	return int64(v)
+}
+func str2int32(s string) (out int32) {
+	v, _ := strconv.ParseInt(s, 10, 0)
+	return int32(v)
+}
+func str2int16(s string) (out int16) {
+	v, _ := strconv.ParseInt(s, 10, 0)
+	return int16(v)
+}
+func str2int8(s string) (out int8) {
+	v, _ := strconv.ParseInt(s, 10, 0)
+	return int8(v)
+}
+func uint642str(v uint64) (s string) {
+	s = strconv.FormatUint(uint64(v), 10)
+	return
+}
+func uint322str(v uint32) (s string) {
+	s = strconv.FormatUint(uint64(v), 10)
+	return
+}
+func uint162str(v uint16) (s string) {
+	s = strconv.FormatUint(uint64(v), 10)
+	return
+}
+func uint82str(v uint8) (s string) {
+	s = strconv.FormatUint(uint64(v), 10)
+	return
+}
+func int2str(v int) (s string) {
+	s = strconv.FormatInt(int64(v), 10)
+	return
+}
+func int642str(v int64) (s string) {
+	s = strconv.FormatInt(int64(v), 10)
+	return
+}
+func int322str(v int32) (s string) {
+	s = strconv.FormatInt(int64(v), 10)
+	return
+}
+func int162str(v int16) (s string) {
+	s = strconv.FormatInt(int64(v), 10)
+	return
+}
+func int82str(v int8) (s string) {
+	s = strconv.FormatInt(int64(v), 10)
+	return
+}
+
 `, property.PackageName))
 
 }

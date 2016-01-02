@@ -40,27 +40,6 @@ var DefaultMysqlTypeMap map[string]string = map[string]string{
 	"key.String":        "varchar(255)",
 	"key.KeyString":     "varchar(255)",
 }
-var DefaultProtoBufTypeMap map[string]string = map[string]string{
-	"bool":          "bool",
-	"int":           "int32",
-	"int8":          "int32",
-	"int16":         "int32",
-	"int32":         "int32",
-	"int64":         "int64",
-	"uint8":         "uint32",
-	"uint16":        "uint32",
-	"uint32":        "uint32",
-	"uint64":        "uint64",
-	"float32":       "double",
-	"float64":       "double",
-	"string":        "string",
-	"time.Time":     "int64",
-	"key.KeyUint64": "uint64",
-	"key.KeyInt":    "int64",
-	"key.KeyInt32":  "int32",
-	"key.String":    "string",
-	"key.KeyString": "string",
-}
 
 var DefaultMysqlDefaultValueMap map[string]string = map[string]string{
 	"bool":              "0",
@@ -184,6 +163,12 @@ func (fd FieldDescriptoin) IsNumber() bool {
 	return false
 }
 
+func (fd FieldDescriptoin) IsTime() bool {
+	if fd.FieldGoType == "time.Time" {
+		return true
+	}
+	return false
+}
 func (fd FieldDescriptoin) IsTimeInt() bool {
 	if fd.FieldGoType == "time.Time" && (fd.GetMysqlType() == "int" || fd.GetMysqlType() == "bigint") {
 		return true
