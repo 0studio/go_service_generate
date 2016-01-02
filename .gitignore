@@ -31,3 +31,7 @@
 /example3/storage_lru_cache_stub.go
 /example4/storage_db_stub.go
 /example4/storage_lru_cache_stub.go
+/example/storage_proxy_stub.go
+/example2/storage_proxy_stub.go
+/example3/storage_proxy_stub.go
+/example4/storage_proxy_stub.go
