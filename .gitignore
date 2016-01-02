@@ -56,3 +56,7 @@
 /example4/storage_mc_stub.go
 /example3/storage_mc_stub.go
 /example/storage_mc_stub.go
+/example/entity_serial_stub.go
+/example2/entity_serial_stub.go
+/example3/entity_serial_stub.go
+/example4/entity_serial_stub.go

@@ -3,36 +3,14 @@ package user
 // this Test file here for making sure the generated file is working as expected
 
 import (
-	"database/sql"
-	"fmt"
-	"github.com/0studio/databasetemplate"
 	"github.com/0studio/goutils"
-	"github.com/0studio/logger"
+	"github.com/dropbox/godropbox/memcache"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
 
-// GRANT ALL PRIVILEGES ON *.* TO 'th_dev'@'127.0.0.1'     IDENTIFIED BY 'th_devpass' WITH GRANT OPTION;
-
-func getMockDB() (dt databasetemplate.DatabaseTemplate) {
-	var ok bool
-	db1, ok := databasetemplate.NewDBInstance(
-		databasetemplate.DBConfig{
-			Host: "127.0.0.1",
-			User: "th_dev",
-			Pass: "th_devpass",
-			Name: "test",
-		}, true)
-	if !ok {
-		fmt.Println("initmock_databasetemplate_fail")
-	}
-	dt = databasetemplate.NewDatabaseTemplateSharding([]*sql.DB{db1})
-
-	return
-}
-
-func TestDBUserStorage(t *testing.T) {
+func TestMCUserStorage(t *testing.T) {
 	now := time.Now()
 
 	u := User{}
@@ -53,7 +31,7 @@ func TestDBUserStorage(t *testing.T) {
 	u.SetT(now)
 	u.SetT2(now)
 
-	store := NewDBUserStorage(getMockDB(), logger.NewStdoutLogger(), true)
+	store := NewMCUserStorage(memcache.NewMockClient(), 1, "user")
 
 	ok := store.Add(&u, now)
 	assert.True(t, ok)
@@ -109,7 +87,7 @@ func TestDBUserStorage(t *testing.T) {
 	assert.False(t, ok)
 }
 
-func TestDBUserStorageMulti(t *testing.T) {
+func TestMCUserStorageMulti(t *testing.T) {
 	now := time.Now()
 	var uin int = 1
 	u := User{}
@@ -124,7 +102,7 @@ func TestDBUserStorageMulti(t *testing.T) {
 	uMap[u.GetName()] = u
 	uMap[u2.GetName()] = u2
 
-	store := NewDBUserStorage(getMockDB(), logger.NewStdoutLogger(), true)
+	store := NewMCUserStorage(memcache.NewMockClient(), 1, "user")
 
 	ok := store.MultiAdd(uin, uMap, now)
 	assert.True(t, ok)
@@ -133,11 +111,16 @@ func TestDBUserStorageMulti(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(uMapRet))
 
-	idList, ok := store.GetIdListByPK1(uin, now)
-	assert.True(t, ok)
-	assert.Equal(t, 2, len(idList))
-	assert.NotEqual(t, 0, idList[0])
-	assert.NotEqual(t, 0, idList[1])
+	// idList := []string{u.GetName(), u2.GetName()}
+	// ok = store.SetIdListByPK1(uin, &idList, now)
+	// assert.True(t, ok)
+	// idList, ok = store.GetIdListByPK1(uin, now)
+	// assert.True(t, ok)
+	// assert.Equal(t, 2, len(idList))
+	// if 2 == len(idList) {
+	// 	assert.NotEqual(t, 0, idList[0])
+	// 	assert.NotEqual(t, 0, idList[1])
+	// }
 
 	ok = store.MultiDelete(uin, []string{u.GetName(), u2.GetName()})
 	assert.True(t, ok)
