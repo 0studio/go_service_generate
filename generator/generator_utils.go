@@ -225,10 +225,11 @@ func sround(s, c string) string {
 	return c + s + c
 }
 func sroundJoin(sList []string, c, sep string) string {
+	var tmpList []string = make([]string, len(sList))
 	for i, s := range sList {
-		sList[i] = sround(s, c)
+		tmpList[i] = sround(s, c)
 	}
-	return strings.Join(sList, sep)
+	return strings.Join(tmpList, sep)
 }
 func sroundJoin2(sList []key.String, c, sep string) string {
     var sList2 []string=make([]string,len(sList))

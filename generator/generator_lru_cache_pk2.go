@@ -180,7 +180,7 @@ func (m LRULocal__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__, 
 		return
 	}
 	list = cacheObj.(__PK2TypeList__)
-	return nil, false
+	return
 }
 func (m LRULocal__Entity__Storage) DeleteIdListByPK1(__PK1FieldName__ __PK1Type__) (ok bool) {
 	m.cacheList.Delete(__PK1FieldName__)
