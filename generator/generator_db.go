@@ -270,9 +270,14 @@ func (sd StructDescription) GenerateDBMultiAdd() string {
 		keySum = pkList[0].FieldName
 	}
 
-	s :=
-		fmt.Sprintf(
-			`func (this *%s) MultiAdd(%s %s,eMap %sMap, now time.Time) bool {
+	if len(pkList) > 2 {
+		return ""
+	}
+	if len(pkList) == 2 {
+
+		s :=
+			fmt.Sprintf(
+				`func (this *%s) MultiAdd(%s %s,eMap %sMap, now time.Time) bool {
 	sql := eMap.GetInsertSql()
 	err := this.DatabaseTemplate.Exec(%s, sql)
      if err != nil {
@@ -289,9 +294,35 @@ func (sd StructDescription) GenerateDBMultiAdd() string {
 	return true
 }
 `, sd.GetDBStorageName(), pkList[0].FieldName, pkList[0].FieldGoType, sd.StructName,
-			keySum,
-			sd.GetDBStorageName(), pkList[0].FieldName)
-	return s
+				keySum,
+				sd.GetDBStorageName(), pkList[0].FieldName)
+		return s
+
+	} else {
+		s :=
+			fmt.Sprintf(
+				`func (this *%s) MultiAdd(eMap %sMap, now time.Time) bool {
+	sql := eMap.GetInsertSql()
+    // maybe bug when sharding ,maybe add at all sharding db
+	err := this.DatabaseTemplate.Exec(nil, sql) // pass nil as sharding sum
+     if err != nil {
+        if this.log != nil {
+            this.log.Errorf("[DB.ERR]%s.MultiAdd %%v  %%s",err,sql)
+        }
+        return false
+     }
+	for k, e := range eMap {
+	    e.ClearFlag()
+        eMap[k]=e
+	}
+
+	return true
+}
+`, sd.GetDBStorageName(), sd.StructName,
+				sd.GetDBStorageName())
+		return s
+
+	}
 
 }
 func (sd StructDescription) GenerateDBSet() string {

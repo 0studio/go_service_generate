@@ -104,6 +104,13 @@ func (m LRULocal__Entity__Storage) MultiUpdate(eMap __Entity__Map, now time.Time
 	return true
 }
 
+func (m LRULocal__Entity__Storage) MultiAdd(eMap __Entity__Map, now time.Time) (ok bool) {
+	for _, e := range eMap {
+		m.Add(&e, now)
+	}
+	return true
+}
+
 func (m LRULocal__Entity__Storage) Delete(k __PKType__) (ok bool) {
 	m.cache.Delete(k)
 	return true

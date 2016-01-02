@@ -52,6 +52,8 @@ type __Entity__Storage interface {
 	Add(e *__Entity__, now time.Time) bool
 	MultiGet(__PK1FieldName__List __PKTypeList__, now time.Time) (eMap __Entity__Map, ok bool)
 	MultiUpdate(eMap __Entity__Map, now time.Time) (ok bool)
+	MultiAdd(eMap __Entity__Map, now time.Time) (ok bool)
+
 	Delete(__PK1FieldName__ __PKType__) (ok bool)
 	MultiDelete(__PK1FieldName__List __PKTypeList__) (ok bool)
 }
@@ -141,6 +143,16 @@ func (this __Entity__StorageProxy) MultiUpdate(eMap __Entity__Map, now time.Time
 	ok = this.preferedStorage.MultiUpdate(eMap, now)
 	return
 }
+func (this __Entity__StorageProxy) MultiAdd(eMap __Entity__Map, now time.Time) (ok bool) {
+	ok = this.backupStorage.MultiAdd(eMap, now)
+	if !ok {
+		this.preferedStorage.MultiAdd(eMap, now)
+		return
+	}
+	ok = this.preferedStorage.MultiAdd(eMap, now)
+	return
+}
+
 func (this __Entity__StorageProxy) Delete(__PK1FieldName__ __PKType__) (ok bool) {
 	ok = this.backupStorage.Delete(__PK1FieldName__)
 	if !ok {

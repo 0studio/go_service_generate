@@ -152,6 +152,9 @@ func (m MC__Entity__Storage) MultiGet(keys __PKTypeList__, now time.Time) (eMap 
 	ok = true
 	return
 }
+func (m MC__Entity__Storage) MultiAdd(eMap __Entity__Map, now time.Time) (ok bool) {
+    return m.MultiUpdate(eMap,now)
+}
 func (m MC__Entity__Storage) MultiUpdate(eMap __Entity__Map, now time.Time) (ok bool) {
 	items := make([]memcache.Item, 0, len(eMap))
 	itemsPtrList := make([]*memcache.Item, 0, len(eMap))
