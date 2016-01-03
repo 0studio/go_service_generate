@@ -35,7 +35,7 @@ func getMockDB() (dt databasetemplate.DatabaseTemplate) {
 
 func TestDBUser2Storage(t *testing.T) {
 	now := time.Now()
-	a := NewStorageProxy(NewDBUser2Storage(getMockDB(), nil, true), NewLRULocalUser2Storage(1, 10))
+	a := NewStorageProxy(NewDBUser2Storage(getMockDB(), nil, true), NewLRUCacheUser2Storage(1, 10))
 	c := NewStorageProxy(a, NewMCUser2Storage(memcache.NewMockClient(), 1, "user2"))
 	fmt.Println(c)
 

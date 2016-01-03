@@ -20,7 +20,7 @@ func TestProxyUser2Storage(t *testing.T) {
 	u.SetAge(11)
 
 	mc := NewMCUser2Storage(memcache.NewMockClient(), 10, "user2")
-	p1 := NewStorageProxy(NewLRULocalUser2Storage(1, 10), mc)
+	p1 := NewStorageProxy(NewLRUCacheUser2Storage(1, 10), mc)
 	store := NewStorageProxy(p1, NewDBUser2Storage(getMockDB(), logger.NewStdoutLogger(), true))
 
 	ok := store.Add(&u, now)
@@ -70,7 +70,7 @@ func TestProxyCacheUser2StorageMulti(t *testing.T) {
 	uMap[u2.GetId()] = u2
 
 	mc := NewMCUser2Storage(memcache.NewMockClient(), 10, "user2")
-	p1 := NewStorageProxy(NewLRULocalUser2Storage(1, 10), mc)
+	p1 := NewStorageProxy(NewLRUCacheUser2Storage(1, 10), mc)
 	store := NewStorageProxy(p1, NewDBUser2Storage(getMockDB(), logger.NewStdoutLogger(), true))
 
 	ok := store.MultiAdd(uMap, now)

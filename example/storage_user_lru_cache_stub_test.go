@@ -30,7 +30,7 @@ func TestLRUUserStorage(t *testing.T) {
 	u.SetT(now)
 	u.SetT2(now)
 
-	store := NewLRULocalUserStorage(1, 100)
+	store := NewLRUCacheUserStorage(1, 100)
 
 	ok := store.Add(&u, now)
 	assert.True(t, ok)
@@ -101,7 +101,7 @@ func TestLRUUserStorageMulti(t *testing.T) {
 	uMap[u.GetName()] = u
 	uMap[u2.GetName()] = u2
 
-	store := NewLRULocalUserStorage(1, 100)
+	store := NewLRUCacheUserStorage(1, 100)
 
 	ok := store.MultiAdd(uin, uMap, now)
 	assert.True(t, ok)

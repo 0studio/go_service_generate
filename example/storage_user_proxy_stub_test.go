@@ -12,7 +12,7 @@ import (
 
 func TestDBUserStorageProxy(t *testing.T) {
 
-	a := NewStorageProxy(NewLRULocalUserStorage(1, 10), NewMCUserStorage(memcache.NewMockClient(), 1, "user"))
+	a := NewStorageProxy(NewLRUCacheUserStorage(1, 10), NewMCUserStorage(memcache.NewMockClient(), 1, "user"))
 	store := NewStorageProxy(a, NewDBUserStorage(getMockDB(), nil, true))
 
 	now := time.Now()
@@ -90,7 +90,7 @@ func TestDBUserStorageProxy(t *testing.T) {
 
 }
 func TestDBUserStorageProxyMulti(t *testing.T) {
-	a := NewStorageProxy(NewLRULocalUserStorage(1, 10), NewMCUserStorage(memcache.NewMockClient(), 1, "user"))
+	a := NewStorageProxy(NewLRUCacheUserStorage(1, 10), NewMCUserStorage(memcache.NewMockClient(), 1, "user"))
 	store := NewStorageProxy(a, NewDBUserStorage(getMockDB(), nil, true))
 
 	now := time.Now()
