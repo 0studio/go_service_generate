@@ -148,14 +148,16 @@ func (sd StructDescription) generateMCPK2getRawKey(pkField, pk2Field FieldDescri
 
 	s := fmt.Sprintf(`
 func (m MC%sStorage) getRawKey(prefixKey string) (%s %s,%s %s) {
-	var prefix string
 	var pk1Str string
 	var pk2Str string
-	fmt.Sscanf(prefixKey, "%%s^%%s_%%s", &pk2Str, &pk1Str, &prefix)
-    %s
-    %s
-	// __PK1FieldName__.FromString(pk1Str)
-	// __PK2FieldName__.FromString(pk1Str)
+	char1Idx := strings.Index(prefixKey, "^")
+	char2Idx := strings.Index(prefixKey, "_")
+    if char1Idx != -1 && char2Idx != -1 && char2Idx > char1Idx {
+		pk2Str = prefixKey[:char1Idx]
+		pk1Str = prefixKey[char1Idx+1 : char2Idx]
+		%s
+		%s
+    }
 	return
 }
 `, sd.StructName, pkField.FieldName, pkField.FieldGoType, pk2Field.FieldName, pk2Field.FieldGoType,
@@ -172,6 +174,7 @@ import (
 	"github.com/0studio/goutils"
 	key "github.com/0studio/storage_key"
 	"github.com/dropbox/godropbox/memcache"
+    "strings"
 	"time"
 )
 
