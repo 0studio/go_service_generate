@@ -63,6 +63,7 @@ func New__Entity__Service(dt databasetemplate.DatabaseTemplate, createTable bool
 		lruStorage:   lruStorage,
 		lruMCStorage: NewStorageProxy(lruStorage, mcStorage),
 		mcDBStorage:  NewStorageProxy(mcStorage, dbStorage),
+        log:               log,
 	}
 
 	__LowercaseEntity__Service.__Entity__Storage = NewStorageProxy(__LowercaseEntity__Service.lruMCStorage, dbStorage)
@@ -78,6 +79,7 @@ func New__Entity__ServiceLocalAndDB(dt databasetemplate.DatabaseTemplate, log lo
 		lruMCStorage:      lruStorage,
 		mcDBStorage:       dbStorage,
 		__Entity__Storage: NewStorageProxy(lruStorage, dbStorage),
+        log:               log,
 	}
 
 	return __LowercaseEntity__Service
@@ -89,6 +91,7 @@ type __Entity__ServiceImpl struct {
 	lruStorage   LRULocal__Entity__Storage // only lrucache
 	mcDBStorage  __Entity__Storage         // mc and db proxy
 	lruMCStorage __Entity__Storage         // lruCache and mc proxy
+    log          logger.Logger
 }
 
 func (impl *__Entity__ServiceImpl) setOutside(e *__Entity__, now time.Time) {

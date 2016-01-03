@@ -87,6 +87,7 @@ func (l __Entity__) OnPurge(why lru.PurgeReason) {
 	}
 	defer func() {
 		if x := recover(); x != nil {
+            printStack(x,__LowercaseEntity__Service.log)
 		}
 	}()
 	__LowercaseEntity__Service.setOutside(&l, time.Now())
@@ -103,6 +104,7 @@ func (eMap __Entity__Map) OnPurge(why lru.PurgeReason) {
 
 	defer func() {
 		if x := recover(); x != nil {
+            printStack(x,__LowercaseEntity__Service.log)
 		}
 	}()
 

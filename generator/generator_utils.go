@@ -21,10 +21,12 @@ func (sd StructDescription) GenerateUtils(property Property, srcDir string) {
 package %s
 
 import (
-    "time"
+	"github.com/0studio/logger"
+	key "github.com/0studio/storage_key"
+	"runtime"
 	"strconv"
 	"strings"
-	key "github.com/0studio/storage_key"
+    "time"
 )
 
 
@@ -857,6 +859,22 @@ func int162str(v int16) (s string) {
 func int82str(v int8) (s string) {
 	s = strconv.FormatInt(int64(v), 10)
 	return
+}
+
+func printStack(x interface{}, log logger.Logger) {
+	if log != nil {
+		log.Error(x)
+	}
+
+	for i := 0; i < 20; i++ {
+		funcName, file, line, ok := runtime.Caller(i)
+		if ok {
+			break
+		}
+		if log != nil {
+			log.Errorf("frame %%v:[%%v,file:%%v,line:%%v]", i, runtime.FuncForPC(funcName).Name(), file, line)
+		}
+	}
 }
 
 `, property.PackageName))
