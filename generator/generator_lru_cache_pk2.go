@@ -64,13 +64,13 @@ import (
 var __importKeyL key.KeyUint64
 var __importGoutilsL goutils.Int32List
 
-type LRULocal__Entity__Storage struct {
+type LRUCache__Entity__Storage struct {
 	cache     *lru.__LRUCacheType__
 	cacheList *lru.__LRUCacheType__
 }
 
-func NewLRULocal__Entity__Storage(shardingCnt int, size int64) (local__Entity__Storage LRULocal__Entity__Storage) {
-	local__Entity__Storage = LRULocal__Entity__Storage{
+func NewLRUCache__Entity__Storage(shardingCnt int, size int64) (local__Entity__Storage LRUCache__Entity__Storage) {
+	local__Entity__Storage = LRUCache__Entity__Storage{
 		cache: lru.__NewLRUCacheType__,
 	    cacheList: lru.__NewLRUCacheType__,
 	}
@@ -78,7 +78,7 @@ func NewLRULocal__Entity__Storage(shardingCnt int, size int64) (local__Entity__S
 	return
 }
 
-func (m LRULocal__Entity__Storage) getMap(__PK1FieldName__ __PK1Type__) (sm __Entity__Map) { // nil or map
+func (m LRUCache__Entity__Storage) getMap(__PK1FieldName__ __PK1Type__) (sm __Entity__Map) { // nil or map
 	cacheObj, ok := m.cache.Get(__PK1FieldName__)
 	if !ok {
 		return
@@ -88,7 +88,7 @@ func (m LRULocal__Entity__Storage) getMap(__PK1FieldName__ __PK1Type__) (sm __En
 
 }
 
-func (m LRULocal__Entity__Storage) Get(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__, now time.Time) (e __Entity__, ok bool) {
+func (m LRUCache__Entity__Storage) Get(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__, now time.Time) (e __Entity__, ok bool) {
 	sm := m.getMap(__PK1FieldName__)
 	if sm == nil {
 		return
@@ -96,10 +96,10 @@ func (m LRULocal__Entity__Storage) Get(__PK1FieldName__ __PK1Type__, __PK2FieldN
 	e, ok = sm[__PK2FieldName__]
 	return
 }
-func (m LRULocal__Entity__Storage) set(__PK1FieldName__ __PK1Type__, eMap __Entity__Map) {
+func (m LRUCache__Entity__Storage) set(__PK1FieldName__ __PK1Type__, eMap __Entity__Map) {
 	m.cache.Set(__PK1FieldName__, eMap)
 }
-func (m LRULocal__Entity__Storage) Set(e *__Entity__, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) Set(e *__Entity__, now time.Time) (ok bool) {
 	sm := m.getMap(e.__PK1FieldName__)
 	if sm == nil {
 		sm = make(__Entity__Map)
@@ -110,7 +110,7 @@ func (m LRULocal__Entity__Storage) Set(e *__Entity__, now time.Time) (ok bool) {
 	sm[e.__PK2FieldName__] = *e
 	return true
 }
-func (m LRULocal__Entity__Storage) Add(e *__Entity__, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) Add(e *__Entity__, now time.Time) (ok bool) {
 	sm := m.getMap(e.__PK1FieldName__)
 	if sm == nil {
 		sm = make(__Entity__Map)
@@ -122,7 +122,7 @@ func (m LRULocal__Entity__Storage) Add(e *__Entity__, now time.Time) (ok bool) {
 
 	return true
 }
-func (m LRULocal__Entity__Storage) MultiGet(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__, now time.Time) (eMap __Entity__Map, ok bool) {
+func (m LRUCache__Entity__Storage) MultiGet(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__, now time.Time) (eMap __Entity__Map, ok bool) {
 	eMap = make(__Entity__Map)
 	ok = true
 	sm := m.getMap(__PK1FieldName__)
@@ -136,24 +136,24 @@ func (m LRULocal__Entity__Storage) MultiGet(__PK1FieldName__ __PK1Type__, keys _
 
 	return
 }
-func (m LRULocal__Entity__Storage) MultiUpdate(__PK1FieldName__ __PK1Type__, eMap __Entity__Map, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) MultiUpdate(__PK1FieldName__ __PK1Type__, eMap __Entity__Map, now time.Time) (ok bool) {
 	for _, e := range eMap {
 		m.Set(&e, now)
 	}
 	return true
 }
-func (m LRULocal__Entity__Storage) MultiAdd(__PK1FieldName__ __PK1Type__, eMap __Entity__Map, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) MultiAdd(__PK1FieldName__ __PK1Type__, eMap __Entity__Map, now time.Time) (ok bool) {
 	for _, e := range eMap {
 		m.Add(&e, now)
 	}
 	return true
 
 }
-func (m LRULocal__Entity__Storage) del(__PK1FieldName__ __PK1Type__, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) del(__PK1FieldName__ __PK1Type__, now time.Time) (ok bool) {
 	m.cache.Delete(__PK1FieldName__)
 	return true
 }
-func (m LRULocal__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__) (ok bool) {
+func (m LRUCache__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2FieldName__ __PK2Type__) (ok bool) {
 	sm := m.getMap(__PK1FieldName__)
 	if sm == nil {
 		return true
@@ -162,19 +162,19 @@ func (m LRULocal__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2Fie
 
 	return true
 }
-func (m LRULocal__Entity__Storage) MultiDelete(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__) (ok bool) {
+func (m LRUCache__Entity__Storage) MultiDelete(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__) (ok bool) {
 	for _, __PK2FieldName__ := range keys {
 		m.Delete(__PK1FieldName__, __PK2FieldName__)
 	}
 	return true
 }
 
-func (m LRULocal__Entity__Storage) SetIdListByPK1(__PK1FieldName__ __PK1Type__, idList *__PK2TypeList__, now time.Time) bool {
+func (m LRUCache__Entity__Storage) SetIdListByPK1(__PK1FieldName__ __PK1Type__, idList *__PK2TypeList__, now time.Time) bool {
 	m.cacheList.Set(__PK1FieldName__, *idList)
 	return true
 }
 
-func (m LRULocal__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__, now time.Time) (list __PK2TypeList__, ok bool) {
+func (m LRUCache__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__, now time.Time) (list __PK2TypeList__, ok bool) {
 	cacheObj, ok := m.cacheList.Get(__PK1FieldName__)
 	if !ok {
 		return
@@ -182,11 +182,11 @@ func (m LRULocal__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__, 
 	list = cacheObj.(__PK2TypeList__)
 	return
 }
-func (m LRULocal__Entity__Storage) DeleteIdListByPK1(__PK1FieldName__ __PK1Type__) (ok bool) {
+func (m LRUCache__Entity__Storage) DeleteIdListByPK1(__PK1FieldName__ __PK1Type__) (ok bool) {
 	m.cacheList.Delete(__PK1FieldName__)
 	return true
 }
-func (m LRULocal__Entity__Storage) GetAllDirty(__PK1FieldName__ __PK1Type__, now time.Time) (eMap __Entity__Map) {
+func (m LRUCache__Entity__Storage) GetAllDirty(__PK1FieldName__ __PK1Type__, now time.Time) (eMap __Entity__Map) {
 	sm := m.getMap(__PK1FieldName__)
 	if sm == nil {
 		return

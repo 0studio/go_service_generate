@@ -55,20 +55,20 @@ import (
 
 var __importKeyL key.KeyUint64
 
-type LRULocal__Entity__Storage struct {
+type LRUCache__Entity__Storage struct {
 	cache *lru.__LRUCacheType__
 	size  int64
 }
 
-func NewLRULocal__Entity__Storage(shardingCnt int, size int64) (local__Entity__Storage LRULocal__Entity__Storage) {
-	local__Entity__Storage = LRULocal__Entity__Storage{
+func NewLRUCache__Entity__Storage(shardingCnt int, size int64) (local__Entity__Storage LRUCache__Entity__Storage) {
+	local__Entity__Storage = LRUCache__Entity__Storage{
 		cache: lru.__NewLRUCacheType__,
 		size:  size,
 	}
 	return
 }
 
-func (m LRULocal__Entity__Storage) Get(k __PKType__, now time.Time) (e __Entity__, ok bool) {
+func (m LRUCache__Entity__Storage) Get(k __PKType__, now time.Time) (e __Entity__, ok bool) {
 	cacheObj, ok := m.cache.Get(k)
 	if !ok {
 		return
@@ -77,15 +77,15 @@ func (m LRULocal__Entity__Storage) Get(k __PKType__, now time.Time) (e __Entity_
 	ok = true
 	return
 }
-func (m LRULocal__Entity__Storage) Set(e *__Entity__, now time.Time) bool {
+func (m LRUCache__Entity__Storage) Set(e *__Entity__, now time.Time) bool {
 	m.cache.Set(e.__PKFieldName__, *e)
 	return true
 }
-func (m LRULocal__Entity__Storage) Add(e *__Entity__, now time.Time) bool {
+func (m LRUCache__Entity__Storage) Add(e *__Entity__, now time.Time) bool {
 	return m.Set(e, now)
 }
 
-func (m LRULocal__Entity__Storage) MultiGet(keys __PKTypeList__, now time.Time) (eMap __Entity__Map, ok bool) {
+func (m LRUCache__Entity__Storage) MultiGet(keys __PKTypeList__, now time.Time) (eMap __Entity__Map, ok bool) {
 	eMap = make(__Entity__Map)
 	var e __Entity__
 	for _, k := range keys {
@@ -97,37 +97,37 @@ func (m LRULocal__Entity__Storage) MultiGet(keys __PKTypeList__, now time.Time) 
 	ok = true
 	return
 }
-func (m LRULocal__Entity__Storage) MultiUpdate(eMap __Entity__Map, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) MultiUpdate(eMap __Entity__Map, now time.Time) (ok bool) {
 	for _, e := range eMap {
 		m.Set(&e, now)
 	}
 	return true
 }
 
-func (m LRULocal__Entity__Storage) MultiAdd(eMap __Entity__Map, now time.Time) (ok bool) {
+func (m LRUCache__Entity__Storage) MultiAdd(eMap __Entity__Map, now time.Time) (ok bool) {
 	for _, e := range eMap {
 		m.Add(&e, now)
 	}
 	return true
 }
 
-func (m LRULocal__Entity__Storage) Delete(k __PKType__) (ok bool) {
+func (m LRUCache__Entity__Storage) Delete(k __PKType__) (ok bool) {
 	m.cache.Delete(k)
 	return true
 }
-func (m LRULocal__Entity__Storage) MultiDelete(keys __PKTypeList__) (ok bool) {
+func (m LRUCache__Entity__Storage) MultiDelete(keys __PKTypeList__) (ok bool) {
 	for _, k := range keys {
 		m.Delete(k)
 	}
 	return true
 }
-func (m LRULocal__Entity__Storage) Len() int {
+func (m LRUCache__Entity__Storage) Len() int {
 	return int(m.cache.Size())
 }
-func (m LRULocal__Entity__Storage) GetAllUin() __PKTypeList__ {
+func (m LRUCache__Entity__Storage) GetAllUin() __PKTypeList__ {
 	return m.cache.Keys()
 }
-func (m LRULocal__Entity__Storage) GetAll() (eMap __Entity__Map) {
+func (m LRUCache__Entity__Storage) GetAll() (eMap __Entity__Map) {
 	// get all not outdate e
 	eMap = make(__Entity__Map)
 	for _, item := range m.cache.Items() {

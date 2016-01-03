@@ -56,7 +56,7 @@ func Get__Entity__Service() __Entity__Service {
 
 // db/memecache/lrucache
 func New__Entity__Service(dt databasetemplate.DatabaseTemplate, createTable bool, mcClient memcache.Client, log logger.Logger) __Entity__Service {
-	lruStorage := NewLRULocal__Entity__Storage(LRU_Cache_Sharding_Cnt, LRU_Cache_Size)
+	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt, LRU_Cache_Size)
 	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds, Memcache_Prefix)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
@@ -71,8 +71,8 @@ func New__Entity__Service(dt databasetemplate.DatabaseTemplate, createTable bool
 }
 
 // lrucache and db
-func New__Entity__ServiceLocalAndDB(dt databasetemplate.DatabaseTemplate, log logger.Logger, createTable bool) __Entity__Service {
-	lruStorage := NewLRULocal__Entity__Storage(LRU_Cache_Sharding_Cnt, LRU_Cache_Size)
+func New__Entity__ServiceCacheAndDB(dt databasetemplate.DatabaseTemplate, log logger.Logger, createTable bool) __Entity__Service {
+	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt, LRU_Cache_Size)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
 		lruStorage:        lruStorage,
@@ -88,7 +88,7 @@ func New__Entity__ServiceLocalAndDB(dt databasetemplate.DatabaseTemplate, log lo
 
 type __Entity__ServiceImpl struct {
 	__Entity__Storage
-	lruStorage   LRULocal__Entity__Storage // only lrucache
+	lruStorage   LRUCache__Entity__Storage // only lrucache
 	mcDBStorage  __Entity__Storage         // mc and db proxy
 	lruMCStorage __Entity__Storage         // lruCache and mc proxy
     log          logger.Logger
