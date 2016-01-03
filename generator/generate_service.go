@@ -13,7 +13,7 @@ func (sd StructDescription) GenerateService(property Property, srcDir string) {
 		return
 	}
 
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("service_%s_stub.go", strings.ToLower(sd.StructName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("service_%s_template.go", strings.ToLower(sd.StructName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return

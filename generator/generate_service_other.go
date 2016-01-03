@@ -13,7 +13,7 @@ func (sd StructDescription) GenerateServiceOther(property Property, srcDir strin
 		return
 	}
 
-	file := filepath.Join(srcDir, fmt.Sprintf("service_%s_other_stub.go", strings.ToLower(sd.StructName)))
+	file := filepath.Join(srcDir, fmt.Sprintf("service_%s_stub.go", strings.ToLower(sd.StructName)))
 	if IsFileExists(file) {
 		return
 	}
