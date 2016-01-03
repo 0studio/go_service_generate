@@ -37,7 +37,13 @@ const (
 // 这个文件里的东西是 可编辑的，
 // 代码生成工具 在生成的时候 ，如果发现 这个文件已经存在,就不会重新这成这个文件，
 
-package user
+package __package__
+
+import (
+	"github.com/0studio/lru"
+	"time"
+)
+
 
 const (
 	LRU_Cache_Sharding_Cnt   = 32   // lru sharding for reducing lock time
@@ -50,6 +56,68 @@ type __Entity__ServiceOther interface {
 	// 这个接口是让你来扩展  __Entity__Service 接口的，
 	// 当你想给__Entity__Service 添加新的接口的时候 ， 在这里添加，
 	//  然后 *__Entity__ServiceImpl  实现此接口即可
+}
+
+// type lru.SizeAware interface
+func (e __Entity__) Size() int {
+	return 1
+}
+// type lru.SizeAware interface
+func (eMap __Entity__Map) Size() int {
+	return 1
+}
+
+
+func (l __Entity__) OnPurge(why lru.PurgeReason) {
+	// 当__Entity__从 lrucache 中被删除 更新 时都会调到此函数
+	if why == lru.PURGE_REASON_UPDATE || why == lru.PURGE_REASON_DELETE { // update or delete
+		return
+	}
+	// if why != lru.CACHEFULL {
+	// 	return
+	// }
+	// why == lru.CACHEFULL
+
+	if !l.IsFlagDirty() {
+		return
+	}
+
+	if __LowercaseEntity__Service == nil {
+		return
+	}
+	defer func() {
+		if x := recover(); x != nil {
+		}
+	}()
+	__LowercaseEntity__Service.setOutside(&l, time.Now())
+}
+
+func (eMap __Entity__Map) OnPurge(why lru.PurgeReason) {
+		// 当__Entity__从 lrucache 中被删除 更新 时都会调到此函数
+	if why == lru.PURGE_REASON_UPDATE || why == lru.PURGE_REASON_DELETE { // update or delete
+		return
+	}
+	if __LowercaseEntity__Service == nil {
+		return
+	}
+
+	defer func() {
+		if x := recover(); x != nil {
+		}
+	}()
+
+	// if why != lru.CACHEFULL {
+	// 	return
+	// }
+	// why == lru.CACHEFULL
+
+	for _, e := range eMap {
+		if !e.IsFlagDirty() {
+			continue
+		}
+
+		__LowercaseEntity__Service.setOutside(&e, time.Now())
+	}
 }
 
 `
