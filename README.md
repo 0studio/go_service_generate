@@ -18,7 +18,7 @@
 
 how to use
 
-give a file like example/user4.txt
+give a file example/user4.txt
 
 ```
 // this an example in example4/user.txt
@@ -42,19 +42,19 @@ go run main.go  example4/user.txt
 ```
 then it will generate some file in example4/
 ```
-   build_proto.sh
-   entity_serial_stub.go
-   entity_stub.go
-   example4.test
-   serial.pb.go
-   serial.proto
-   storage_db_stub.go
-   storage_db_stub_test.go
-   storage_lru_cache_stub.go
-   storage_mc_stub.go
-   storage_proxy_stub.go
-   user_create_table.sql
-   utils_stub.go
+build_proto.sh
+ entity_user4_serial_template.go
+ entity_user4_template.go
+ serial_user4.pb.go
+ serial_user4.proto
+ service_user4_stub.go
+ service_user4_template.go
+ storage_user4_db_template.go
+ storage_user4_lru_cache_template.go
+ storage_user4_mc_template.go
+ storage_user4_proxy_template.go
+ user_create_table.sql
+ utils_user4_template.go
 ```
 before that 
 you need make sure you have install protobuf(on mac:brew install protobuf)
