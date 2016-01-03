@@ -147,8 +147,8 @@ func (fd FieldDescriptoin) IsBool() bool {
 	return false
 }
 func (fd FieldDescriptoin) IsFloat() bool {
-	if fd.FieldGoType == "flaot32" ||
-		fd.FieldGoType == "flaot64" {
+	if fd.FieldGoType == "float32" ||
+		fd.FieldGoType == "float64" {
 		return true
 	}
 	return false
@@ -218,8 +218,11 @@ func (fd FieldDescriptoin) GetFieldPosStr() string {
 	if fd.IsBool() {
 		return "%d"
 	}
-	if fd.IsNumber() {
+	if fd.IsInt() {
 		return "%d"
+	}
+	if fd.IsFloat() {
+		return "%f"
 	}
 	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
 		return "%s"

@@ -162,8 +162,11 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 
 			goCode += "%d"
 		}
-		if field.IsNumber() {
+		if field.IsInt() {
 			goCode += "%d"
+		}
+		if field.IsFloat() {
+			goCode += "%f"
 		}
 		if field.IsIntList() {
 			goCode += "'%s'"
@@ -264,8 +267,11 @@ func (sd StructDescription) GenerateInsertForMap() (goCode string) {
 
 			valuesPos += "%d"
 		}
-		if field.IsNumber() {
+		if field.IsInt() {
 			valuesPos += "%d"
+		}
+		if field.IsFloat() {
+			valuesPos += "%f"
 		}
 		if field.IsIntList() {
 			valuesPos += "'%s'"
