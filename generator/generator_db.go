@@ -8,7 +8,7 @@ import (
 )
 
 func (sd StructDescription) GenerateDBStorage(property Property, srcDir string) {
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("storage_db_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("storage_%s_db_stub.go", strings.ToLower(sd.StructName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -8,7 +8,7 @@ import (
 )
 
 func (sd StructDescription) GenerateEntity(property Property, srcDir string) {
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("entity_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("entity_%s_stub.go", strings.ToLower(sd.StructName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -407,4 +407,10 @@ func Camelize(s string) (ret string) {
 		return s
 	}
 	return strings.ToUpper(s[0:1]) + s[1:]
+}
+func LowerCaseFirstChar(s string) (ret string) {
+	if len(s) == 0 {
+		return s
+	}
+	return strings.ToLower(s[0:1]) + s[1:]
 }

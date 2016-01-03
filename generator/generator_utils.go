@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-func GenerateUtils(property Property, srcDir string) {
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("utils_stub.go")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+func (sd StructDescription) GenerateUtils(property Property, srcDir string) {
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("utils_%s_stub.go", strings.ToLower(sd.StructName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return
