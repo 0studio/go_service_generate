@@ -55,7 +55,8 @@ func Get__Entity__Service() __Entity__Service {
 }
 
 // db/memecache/lrucache
-func New__Entity__Service(dt databasetemplate.DatabaseTemplate, createTable bool, mcClient memcache.Client, log logger.Logger) __Entity__Service {
+// log can be nil
+func New__Entity__Service(dt databasetemplate.DatabaseTemplate, mcClient memcache.Client, log logger.Logger, createTable bool) __Entity__Service {
 	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt, LRU_Cache_Size)
 	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds, Memcache_Prefix)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
@@ -71,6 +72,7 @@ func New__Entity__Service(dt databasetemplate.DatabaseTemplate, createTable bool
 }
 
 // lrucache and db
+// log can be nil
 func New__Entity__ServiceCacheAndDB(dt databasetemplate.DatabaseTemplate, log logger.Logger, createTable bool) __Entity__Service {
 	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt, LRU_Cache_Size)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
