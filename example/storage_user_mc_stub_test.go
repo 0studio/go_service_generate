@@ -59,6 +59,9 @@ func TestMCUserStorage(t *testing.T) {
 	u.SetT(now)
 	u.SetT2(now)
 	u.SetSex(!u.GetSex())
+	u.SetF32(1.3)
+	u.SetF64(2.3)
+
 	ok = store.Set(&u, now)
 	assert.True(t, ok)
 
@@ -79,6 +82,8 @@ func TestMCUserStorage(t *testing.T) {
 	assert.Equal(t, uRet.GetSex(), u.GetSex())
 	assert.Equal(t, uRet.GetT().Unix(), u.GetT().Unix())
 	assert.Equal(t, uRet.GetT2().Unix(), u.GetT2().Unix())
+	assert.Equal(t, uRet.GetF32(), u.GetF32())
+	assert.Equal(t, uRet.GetF64(), u.GetF64())
 
 	ok = store.Delete(u.GetId(), u.GetName())
 	assert.True(t, ok)

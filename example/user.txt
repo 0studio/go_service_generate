@@ -8,6 +8,8 @@ type User struct {
 	id   int    `mysql:"pk,defalut=1,type=bigint"` // id
 	name string `mysql:"pk,defalut='hello',name=helloName,type=varchar(10)"`
 	age  int `go:"default=11"`
+	f64  float64
+	f32  float32
 	sex  bool
 	t    time.Time `mysql:"type=int"`
 	t2   time.Time
