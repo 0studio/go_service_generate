@@ -134,11 +134,12 @@ func (sd StructDescription) generateNewEntity() (s string) {
     e = %s{
 %s
     }
+    e.flag.SetFlag(%d)
     return
 }
 `, sd.StructName, sd.GetPKVarDeclear(), sd.StructName,
 		sd.StructName,
-		fields)
+		fields, len(sd.Fields))
 	return
 }
 func (sd StructDescription) generateEntityMap() (s string) {
