@@ -191,6 +191,10 @@ func (fd FieldDescriptoin) GetMysqlType() string {
 	}
 	return DefaultMysqlTypeMap[fd.FieldGoType]
 }
+func (fd FieldDescriptoin) GetMysqlKey() string {
+	key := fd.MysqlTagFieldList.GetValue("key")
+	return key
+}
 func (fd FieldDescriptoin) GetMysqlDefalutValue() string {
 	mysqlDefault := fd.MysqlTagFieldList.GetValue("default")
 	if mysqlDefault != "" {
@@ -444,13 +448,15 @@ func (sd StructDescription) GenerateCreateTableSql() (sql string, err error) {
 		sql += "`" + fieldD.GetMysqlFieldName() + "` " + fieldD.GetMysqlType() + " NOT NULL DEFAULT " + fieldD.GetMysqlDefalutValue()
 		if idx != len(sd.Fields)-1 {
 			sql += ",\n"
-		} else {
-			sql += "\n"
 		}
 	}
 	pkList := sd.GetPK()
 	if len(pkList) != 0 {
-		sql += ",primary key (" + strings.Join(pkList, ",") + ")\n"
+		sql += ",\nprimary key (" + strings.Join(pkList, ",") + ")"
+	}
+	if sd.Fields[0].GetMysqlKey() != "" {
+		sql += ",\n" + sd.Fields[0].GetMysqlKey() + "\n"
+
 	}
 
 	sql += ");"
