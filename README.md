@@ -1,6 +1,6 @@
 # go_service_generate
  this tool can generate service for db/memcache/lrucache
- you just need defined a golang struct
+ you just need define a golang struct
  and use this tool ,
  it will generate 3 struct implements  an interface like 
 ```
