@@ -27,6 +27,7 @@ func (sd StructDescription) GenerateServiceOther(property Property, srcDir strin
 	s := strings.Replace(SERVICE_OTHER_TEMPLATE, "__package__", property.PackageName, -1)
 	s = strings.Replace(s, "__Entity__", sd.StructName, -1)
 	s = strings.Replace(s, "__LowercaseEntity__", LowerCaseFirstChar(sd.StructName), -1)
+
 	outputF.WriteString(s)
 
 }
@@ -43,7 +44,6 @@ import (
 	"github.com/0studio/lru"
 	"time"
 )
-
 
 const (
 	LRU_Cache_Sharding_Cnt   = 32   // lru sharding for reducing lock time

@@ -23,8 +23,36 @@ func (sd StructDescription) GenerateService(property Property, srcDir string) {
 	s := strings.Replace(SERVICE_TEMPLATE, "__package__", property.PackageName, -1)
 	s = strings.Replace(s, "__Entity__", sd.StructName, -1)
 	s = strings.Replace(s, "__LowercaseEntity__", LowerCaseFirstChar(sd.StructName), -1)
+
+	getDefaultFunDeclear, getDefaultFunImplments := sd.generateServiceGetDefault()
+
+	s = strings.Replace(s, "__GetDefaultDeclard__", getDefaultFunDeclear, -1)
+	s = strings.Replace(s, "__GetDefaultImplments__", getDefaultFunImplments, -1)
+
 	outputF.WriteString(s)
 
+}
+func (sd StructDescription) generateServiceGetDefault() (declare string, implements string) {
+	pkList := sd.GetPKFieldList()
+	if len(pkList) > 2 {
+		return
+	}
+	declare = fmt.Sprintf("GetDefault(%s, now time.Time) (e %s, ok bool)", sd.GetPKVarDeclear(), sd.StructName)
+	implements =
+		fmt.Sprintf(`func (impl *%sServiceImpl) GetDefault(%s, now time.Time) (e %s, ok bool) {
+	e, ok = impl.Get(%s, now)
+	if !ok {
+		e = New%s(%s)
+		ok = impl.Add(&e, now)
+		return
+	}
+	return
+}
+`, sd.StructName, sd.GetPKVarDeclear(), sd.StructName,
+			sd.GetWherePosValueWithoutThisPrefix(),
+			sd.StructName, sd.GetWherePosValueWithoutThisPrefix())
+
+	return
 }
 
 const (
@@ -35,8 +63,14 @@ import (
 	"github.com/0studio/databasetemplate"
 	"github.com/0studio/logger"
 	"github.com/dropbox/godropbox/memcache"
+	"github.com/0studio/goutils"
+    key "github.com/0studio/storage_key"
 	"time"
 )
+var ___importTimeSO time.Time
+var ___importKeySO key.KeyUint64
+var ___importGoutilsSO goutils.Int32List
+
 
 type __Entity__Service interface {
 	__Entity__Storage
@@ -46,6 +80,8 @@ type __Entity__Service interface {
 	// 当自动生成的文件没法满足你需求的时候
 	// 在另一个文件里实现新的接口， 保持这个文件不变
 	__Entity__ServiceOther
+    __GetDefaultDeclard__
+
 }
 
 var __LowercaseEntity__Service *__Entity__ServiceImpl
@@ -104,5 +140,7 @@ func (impl *__Entity__ServiceImpl) setOutside(e *__Entity__, now time.Time) {
 		impl.mcDBStorage.Set(e, now)
 	}
 }
+__GetDefaultImplments__
+
 `
 )
