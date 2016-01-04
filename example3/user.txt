@@ -5,13 +5,13 @@ import (
 )
 
 type User3 struct {
-	id   key.KeyUint64    `mysql:"pk,defalut=1,type=bigint"` // id
-	key32   key.KeyInt32    `mysql:"pk,defalut=1,type=bigint"` // id
-	name string `mysql:"defalut='hello',name=helloName,type=varchar(10)"`
+	id   key.KeyUint64    `mysql:"pk,default=1,type=bigint"` // id
+	key32   key.KeyInt32    `mysql:"pk,default=1,type=bigint"` // id
+	name string `mysql:"default=\"'hello'\",name=helloName,type=varchar(10)"`
 	age  int
 	sex  bool
 	t    time.Time `mysql:"type=int"`
 	t2   time.Time
-	ikey   key.KeyInt    `mysql:"defalut=1,type=bigint"` // id
+	ikey   key.KeyInt    `mysql:"default=1,type=bigint"` // id
 
 }
