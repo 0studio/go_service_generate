@@ -24,10 +24,14 @@ func (sd StructDescription) GenerateService(property Property, srcDir string) {
 	s = strings.Replace(s, "__Entity__", sd.StructName, -1)
 	s = strings.Replace(s, "__LowercaseEntity__", LowerCaseFirstChar(sd.StructName), -1)
 
-	getDefaultFunDeclear, getDefaultFunImplments := sd.generateServiceGetDefault()
+	getDefaultFunDeclare, getDefaultFunImpl := sd.generateServiceGetDefault()
 
-	s = strings.Replace(s, "__GetDefaultDeclard__", getDefaultFunDeclear, -1)
-	s = strings.Replace(s, "__GetDefaultImplments__", getDefaultFunImplments, -1)
+	s = strings.Replace(s, "__GetDefaultDeclard__", getDefaultFunDeclare, -1)
+	s = strings.Replace(s, "__GetDefaultImplments__", getDefaultFunImpl, -1)
+
+	getAllFunDeclare, getAllImpl := sd.generateServiceGetAll()
+	s = strings.Replace(s, "__GetAllDeclard__", getAllFunDeclare, -1)
+	s = strings.Replace(s, "__GetAllImplments__", getAllImpl, -1)
 
 	outputF.WriteString(s)
 
@@ -51,6 +55,27 @@ func (sd StructDescription) generateServiceGetDefault() (declare string, impleme
 `, sd.StructName, sd.GetPKVarDeclear(), sd.StructName,
 			sd.GetWherePosValueWithoutThisPrefix(),
 			sd.StructName, sd.GetWherePosValueWithoutThisPrefix())
+
+	return
+}
+func (sd StructDescription) generateServiceGetAll() (declare string, implements string) {
+	pkList := sd.GetPKFieldList()
+	if len(pkList) != 2 {
+		return
+	}
+	declare = fmt.Sprintf("GetAll(%s %s, now time.Time) (eMap %s, ok bool)",
+		LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType, sd.GetSuggestMapName())
+	implements =
+		fmt.Sprintf(`func (impl *%sServiceImpl) GetAll(%s %s, now time.Time) (eMap %s, ok bool) {
+	idList, ok := impl.GetIdListByPK1(%s, now)
+	if !ok {
+		return
+	}
+	return impl.MultiGet(%s, idList, now)
+}
+`, sd.StructName, LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType, sd.GetSuggestMapName(),
+			LowerCaseFirstChar(pkList[0].FieldName),
+			LowerCaseFirstChar(pkList[0].FieldName))
 
 	return
 }
@@ -81,6 +106,7 @@ type __Entity__Service interface {
 	// 在另一个文件里实现新的接口， 保持这个文件不变
 	__Entity__ServiceOther
     __GetDefaultDeclard__
+    __GetAllDeclard__
 
 }
 
@@ -141,6 +167,7 @@ func (impl *__Entity__ServiceImpl) setOutside(e *__Entity__, now time.Time) {
 	}
 }
 __GetDefaultImplments__
+__GetAllImplments__
 
 `
 )
