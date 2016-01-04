@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	id   int    `mysql:"pk,defalut=1,type=bigint"` // id
+	id   int    `mysql:"pk,defalut=1,type=bigint,key='key(age,t),key(t2)'"` // id
 	name string `mysql:"pk,defalut='hello',name=helloName,type=varchar(10)"`
 	age  int `go:"default=11"`
 	f64  float64
