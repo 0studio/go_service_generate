@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -46,7 +47,10 @@ func (sd StructDescription) generateLRUCache2PK(pk1Field FieldDescriptoin, pk2Fi
 	}
 
 	s = strings.Replace(s, "__PK2TypeList__", pk2TypeList, -1)
-	outputF.WriteString(s)
+
+	formatSrc, _ := format.Source([]byte(s))
+	outputF.WriteString(string(formatSrc))
+
 	return true
 }
 

@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,7 +64,10 @@ func (sd StructDescription) generateMCPK1(pkField FieldDescriptoin, property Pro
 	}
 
 	s = strings.Replace(s, "__PKTypeList__", pkTypeList, -1)
-	outputF.WriteString(s)
+
+	formatSrc, _ := format.Source([]byte(s))
+	outputF.WriteString(string(formatSrc))
+
 	return true
 }
 

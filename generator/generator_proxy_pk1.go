@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -29,7 +30,9 @@ func (sd StructDescription) generateProxyPK1(pkField FieldDescriptoin, property 
 	}
 
 	s = strings.Replace(s, "__PKTypeList__", pkTypeList, -1)
-	outputF.WriteString(s)
+	formatSrc, _ := format.Source([]byte(s))
+	outputF.WriteString(string(formatSrc))
+
 	return true
 }
 

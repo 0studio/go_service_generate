@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,7 +37,8 @@ func (sd StructDescription) GenerateService(property Property, srcDir string) {
 	s = strings.Replace(s, "__ClearLocalDeclard__", clearLocalDeclare, -1)
 	s = strings.Replace(s, "__ClearLocalImplments__", clearLocalImpl, -1)
 
-	outputF.WriteString(s)
+	formatSrc, _ := format.Source([]byte(s))
+	outputF.WriteString(string(formatSrc))
 
 }
 func (sd StructDescription) generateServiceGetDefault() (declare string, implements string) {

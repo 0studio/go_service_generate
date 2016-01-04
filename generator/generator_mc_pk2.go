@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -31,9 +32,11 @@ func (sd StructDescription) generateMCPK2(pkField, pk2Field FieldDescriptoin, pr
 
 	s = strings.Replace(s, "__PK2TypeList__", pk2TypeList, -1)
 
-	outputF.WriteString(s)
-	outputF.WriteString(sd.generateMCPK2getMCKey(pkField, pk2Field))
-	outputF.WriteString(sd.generateMCPK2getRawKey(pkField, pk2Field))
+	s += sd.generateMCPK2getMCKey(pkField, pk2Field)
+	s += sd.generateMCPK2getRawKey(pkField, pk2Field)
+
+	formatSrc, _ := format.Source([]byte(s))
+	outputF.WriteString(string(formatSrc))
 
 	return true
 }

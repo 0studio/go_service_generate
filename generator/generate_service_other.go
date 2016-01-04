@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
@@ -27,6 +28,9 @@ func (sd StructDescription) GenerateServiceOther(property Property, srcDir strin
 	s := strings.Replace(SERVICE_OTHER_TEMPLATE, "__package__", property.PackageName, -1)
 	s = strings.Replace(s, "__Entity__", sd.StructName, -1)
 	s = strings.Replace(s, "__LowercaseEntity__", LowerCaseFirstChar(sd.StructName), -1)
+
+	formatSrc, _ := format.Source([]byte(s))
+	outputF.WriteString(string(formatSrc))
 
 	outputF.WriteString(s)
 
