@@ -157,8 +157,8 @@ func Get__Entity__Service() __Entity__Service {
 // db/memecache/lrucache
 // log can be nil
 func New__Entity__Service(dt databasetemplate.DatabaseTemplate, mcClient memcache.Client, log logger.Logger, createTable bool) __Entity__Service {
-	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt__Entity__, LRU_Cache_Size__Entity__)
-	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds__Entity__, Memcache_Prefix__Entity__)
+	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt___Entity__, LRU_Cache_Size___Entity__)
+	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds___Entity__, Memcache_Prefix___Entity__)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
 		lruStorage:   lruStorage,
@@ -174,7 +174,7 @@ func New__Entity__Service(dt databasetemplate.DatabaseTemplate, mcClient memcach
 // lrucache and db
 // log can be nil
 func New__Entity__ServiceCacheAndDB(dt databasetemplate.DatabaseTemplate, log logger.Logger, createTable bool) __Entity__Service {
-	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt__Entity__, LRU_Cache_Size__Entity__)
+	lruStorage := NewLRUCache__Entity__Storage(LRU_Cache_Sharding_Cnt___Entity__, LRU_Cache_Size___Entity__)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
 		lruStorage:        lruStorage,
@@ -190,7 +190,7 @@ func New__Entity__ServiceCacheAndDB(dt databasetemplate.DatabaseTemplate, log lo
 // memcache and db
 // log can be nil
 func New__Entity__ServiceMCAndDB(dt databasetemplate.DatabaseTemplate, mcClient memcache.Client, log logger.Logger, createTable bool) __Entity__Service {
-	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds__Entity__, Memcache_Prefix__Entity__)
+	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds___Entity__, Memcache_Prefix___Entity__)
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
 		lruMCStorage: mcStorage,

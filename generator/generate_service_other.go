@@ -52,10 +52,10 @@ import (
 )
 
 const (
-	LRU_Cache_Sharding_Cnt__Entity__   = 32   // lru sharding for reducing lock time
-	LRU_Cache_Size__Entity__           = 1024 // total size of lru cache
-	Memcache_Expired_Seconds__Entity__ = 60 * 30
-	Memcache_Prefix__Entity__          = "__LowercaseEntity__"
+	LRU_Cache_Sharding_Cnt___Entity__   = 32   // lru sharding for reducing lock time
+	LRU_Cache_Size___Entity__           = 1024 // total size of lru cache
+	Memcache_Expired_Seconds___Entity__ = 60 * 30
+	Memcache_Prefix___Entity__          = "__LowercaseEntity__"
 )
 
 type __Entity__ServiceOther interface {
