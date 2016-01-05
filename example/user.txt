@@ -23,5 +23,6 @@ type User struct {
 	i8List  []uint16
 	i9List  []uint64 `mysql:"type=varchar(100)"`
 	i10List  goutils.IntList `mysql:"type=varchar(100)"`
+	s11List  []string
 
 }
