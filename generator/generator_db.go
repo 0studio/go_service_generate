@@ -272,12 +272,13 @@ func (sd StructDescription) GenerateDBAdd() string {
 			`func (this *%s) Add(e *%s, now time.Time) bool {
 	sql := e.GetInsertSql()
 	err := this.DatabaseTemplate.Exec(%s, sql)
-	e.ClearFlag()
      if err != nil {
         if this.log != nil {
             this.log.Errorf("[DB.ERR]%s.Add %%v %%v %%s",*e,err,sql)
         }
+        return
      }
+	e.ClearFlag()
 	return err == nil
 }
 `, sd.GetDBStorageName(), sd.StructName, keySum, sd.GetDBStorageName())
