@@ -81,7 +81,7 @@ import (
 	"strings"
 	"time"
 )
-var __importKeyMC key.KeyUint64
+var __importKeyMC__Entity__ key.KeyUint64
 
 type MC__Entity__Storage struct {
 	expireSeconds uint32

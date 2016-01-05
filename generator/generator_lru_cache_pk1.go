@@ -57,7 +57,7 @@ import (
 	"time"
 )
 
-var __importKeyL key.KeyUint64
+var __importKeyL__Entity__ key.KeyUint64
 
 type LRUCache__Entity__Storage struct {
 	cache *lru.__LRUCacheType__

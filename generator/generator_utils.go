@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-func (sd StructDescription) GenerateUtils(property Property, srcDir string) {
-	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("utils_%s_template.go", strings.ToLower(sd.StructName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+func GenerateUtils(property Property, srcDir string) {
+	outputF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("utils_%s_template.go", strings.ToLower(property.PackageName))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
 		return

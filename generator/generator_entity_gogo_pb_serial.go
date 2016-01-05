@@ -25,11 +25,12 @@ import (
     key "github.com/0studio/storage_key"
 	"github.com/gogo/protobuf/proto"
 )
-var ___importTimeS time.Time
-var ___importGoutilsS goutils.Int32List
-var ___importKeyS key.KeyUint64
+var ___importTimeS%s time.Time
+var ___importGoutilsS%s goutils.Int32List
+var ___importKeyS%s key.KeyUint64
 
-`, property.PackageName)
+`, property.PackageName,
+		sd.StructName, sd.StructName, sd.StructName)
 	s += sd.generateEntitySerial(property, srcDir)
 	s += sd.generateEntityUnSerial(property, srcDir)
 	formatSrc, _ := format.Source([]byte(s))

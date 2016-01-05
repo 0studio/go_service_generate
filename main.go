@@ -37,15 +37,18 @@ func main() {
 		return
 	}
 
-	structDescriptionList[0].GenerateUtils(property, srcDir)
-	structDescriptionList[0].GenerateEntity(property, srcDir)
-	structDescriptionList[0].GenerateDBStorage(property, srcDir)
-	structDescriptionList[0].GenerateLRUCache(property, srcDir)
-	structDescriptionList[0].GenerateProxy(property, srcDir)
-	structDescriptionList[0].GenerateMC(property, srcDir)
-	structDescriptionList[0].GenerateGogoPB(property, srcDir)
-	structDescriptionList[0].GenerateService(property, srcDir)
-	structDescriptionList[0].GenerateServiceOther(property, srcDir)
+	generator.GenerateUtils(property, srcDir)
+	for _, sd := range structDescriptionList {
+		sd.GenerateEntity(property, srcDir)
+		sd.GenerateDBStorage(property, srcDir)
+		sd.GenerateLRUCache(property, srcDir)
+		sd.GenerateProxy(property, srcDir)
+		sd.GenerateMC(property, srcDir)
+
+		sd.GenerateGogoPB(property, srcDir)
+		sd.GenerateService(property, srcDir)
+		sd.GenerateServiceOther(property, srcDir)
+	}
 
 	sqlF, err := os.OpenFile(filepath.Join(srcDir, fmt.Sprintf("%s_create_table.sql", getFileName(goStructFile))), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {

@@ -49,8 +49,8 @@ import (
 	"time"
 )
 
-var __importKeyP key.KeyUint64
-var __importGoutils goutils.Int32List
+var __importKeyP__Entity__ key.KeyUint64
+var __importGoutils__Entity__ goutils.Int32List
 
 type __Entity__Storage interface {
 	SetIdListByPK1(__PK1FieldName__ __PK1Type__, __PK2FieldName__List *__PK2TypeList__, now time.Time) (ok bool)

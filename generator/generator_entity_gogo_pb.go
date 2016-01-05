@@ -136,7 +136,7 @@ option (gogoproto.unmarshaler_all) = true;
 }
 
 func (sd StructDescription) GeneratePBBuildScript(property Property, srcDir string) {
-	scriptFileName, _ := filepath.Abs(filepath.Join(srcDir, fmt.Sprintf("build_proto.sh")))
+	scriptFileName, _ := filepath.Abs(filepath.Join(srcDir, fmt.Sprintf("build_%s_proto.sh", sd.StructName)))
 
 	if !IsFileExists(scriptFileName) {
 		outputF, err := os.OpenFile(scriptFileName, os.O_RDWR|os.O_CREATE, os.ModePerm)
@@ -165,7 +165,7 @@ protoc --proto_path=$GOPATH/src/github.com/gogo/protobuf/protobuf:$GOPATH/src:. 
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("-------------------------------------------------")
-		fmt.Println("[Warning]:running build_proto.sh failled\nmaybe you need edit this file  and $GOPATH is not empty\nand make sure protobuf and gogo/protobuf/proto is installed on your os")
+		fmt.Printf("[Warning]:running %s failled\nmaybe you need edit this file  and $GOPATH is not empty\nand make sure protobuf and gogo/protobuf/proto is installed on your os\n", fmt.Sprintf("build_%s_proto.sh", sd.StructName))
 		fmt.Println(err)
 	}
 

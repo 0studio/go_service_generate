@@ -46,8 +46,8 @@ import (
 	"time"
 )
 
-var __importKeyP key.KeyUint64
-var __importGoutilsP goutils.Int32List
+var __importKeyP__Entity__ key.KeyUint64
+var __importGoutilsP__Entity__ goutils.Int32List
 
 type __Entity__Storage interface {
 	Get(__PK1FieldName__ __PKType__, now time.Time) (e __Entity__, ok bool)

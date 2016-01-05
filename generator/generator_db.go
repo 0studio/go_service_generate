@@ -29,11 +29,11 @@ import (
     key "github.com/0studio/storage_key"
     "time"
 )
-var ___importTimeDB time.Time
-var ___importKeyDB key.KeyUint64
-var ___importGoutilsDB goutils.Int32List
+var ___importTimeDB%s time.Time
+var ___importKeyDB%s key.KeyUint64
+var ___importGoutilsDB%s goutils.Int32List
 
-`, property.PackageName)
+`, property.PackageName, sd.StructName, sd.StructName, sd.StructName)
 
 	s += sd.GenerateDBStorageStruct()
 	s += sd.GenerateNewDBStorageStruct()

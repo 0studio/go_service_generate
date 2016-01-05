@@ -181,8 +181,8 @@ import (
 	"time"
 )
 
-var __importKeyMC key.KeyUint64
-var __importGoutilsMC goutils.Int32List
+var __importKeyMC__Entity__ key.KeyUint64
+var __importGoutilsMC__Entity__ goutils.Int32List
 
 type MC__Entity__Storage struct {
 	expireSeconds uint32
