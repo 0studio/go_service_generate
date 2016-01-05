@@ -31,9 +31,6 @@ func (sd StructDescription) GenerateServiceOther(property Property, srcDir strin
 
 	formatSrc, _ := format.Source([]byte(s))
 	outputF.WriteString(string(formatSrc))
-
-	outputF.WriteString(s)
-
 }
 
 const (
