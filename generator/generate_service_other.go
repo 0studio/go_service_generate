@@ -10,7 +10,7 @@ import (
 
 func (sd StructDescription) GenerateServiceOther(property Property, srcDir string) {
 	pkList := sd.GetPKFieldList()
-	if len(pkList) > 2 {
+	if len(pkList) > 2 || len(pkList) == 0 {
 		return
 	}
 
@@ -30,7 +30,12 @@ func (sd StructDescription) GenerateServiceOther(property Property, srcDir strin
 	s = strings.Replace(s, "__LowercaseEntity__", LowerCaseFirstChar(sd.StructName), -1)
 
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
+
 }
 
 const (

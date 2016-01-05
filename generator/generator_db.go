@@ -39,6 +39,7 @@ var ___importGoutilsDB%s goutils.Int32List
 	s += sd.GenerateNewDBStorageStruct()
 	s += sd.GenerateDBCreateTable()
 	s += sd.GenerateDBMapRow()
+	s += sd.GenerateDBGetAll()
 	s += sd.GenerateDBGet()
 	s += sd.GenerateDBAdd()
 	s += sd.GenerateDBMultiAdd()
@@ -51,7 +52,11 @@ var ___importGoutilsDB%s goutils.Int32List
 	s += sd.GenerateDBsetIdList()
 
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 
 }
 func (sd StructDescription) GenerateDBStorageStruct() string {
@@ -220,6 +225,10 @@ func isTypeKeySum(goType string) bool {
 func (sd StructDescription) GenerateDBGet() string {
 	pkList := sd.GetPKFieldList()
 	var keySum string = "nil"
+	if len(pkList) == 0 {
+		return ""
+	}
+
 	if isTypeKeySum(pkList[0].FieldGoType) {
 		keySum = pkList[0].FieldName
 	}
@@ -254,7 +263,7 @@ func (sd StructDescription) GenerateDBGet() string {
 func (sd StructDescription) GenerateDBAdd() string {
 	pkList := sd.GetPKFieldList()
 	var keySum string = "nil"
-	if isTypeKeySum(pkList[0].FieldGoType) {
+	if len(pkList) > 0 && isTypeKeySum(pkList[0].FieldGoType) {
 		keySum = "e." + pkList[0].FieldName
 	}
 
@@ -278,13 +287,13 @@ func (sd StructDescription) GenerateDBAdd() string {
 func (sd StructDescription) GenerateDBMultiAdd() string {
 	pkList := sd.GetPKFieldList()
 	var keySum string = "nil"
+	if len(pkList) > 2 || len(pkList) == 0 {
+		return ""
+	}
 	if isTypeKeySum(pkList[0].FieldGoType) {
 		keySum = pkList[0].FieldName
 	}
 
-	if len(pkList) > 2 {
-		return ""
-	}
 	if len(pkList) == 2 {
 
 		s :=
@@ -310,7 +319,7 @@ func (sd StructDescription) GenerateDBMultiAdd() string {
 				sd.GetDBStorageName(), pkList[0].FieldName)
 		return s
 
-	} else {
+	} else if len(pkList) == 1 {
 		s :=
 			fmt.Sprintf(
 				`func (this *%s) MultiAdd(eMap %sMap, now time.Time) bool {
@@ -336,9 +345,14 @@ func (sd StructDescription) GenerateDBMultiAdd() string {
 
 	}
 
+	return ""
 }
 func (sd StructDescription) GenerateDBSet() string {
 	pkList := sd.GetPKFieldList()
+	if len(pkList) == 0 {
+		return ""
+	}
+
 	var keySum string = "nil"
 	if isTypeKeySum(pkList[0].FieldGoType) {
 		keySum = "e." + pkList[0].FieldName
@@ -371,10 +385,46 @@ func (sd StructDescription) GenerateDBSet() string {
 `, sd.GetDBStorageName(), sd.StructName, keySum, sd.GetDBStorageName())
 	return s
 }
+func (sd StructDescription) GenerateDBGetAll() string {
+
+	s :=
+		fmt.Sprintf(
+			`func (this *%s) GetAll() (eList %sList, ok bool) {
+	sql := "select %s from %s"
+	var obj interface{}
+	var err error
+	var arradd []interface{}
+	var e %s
+	arradd, err = this.DatabaseTemplate.QueryArray(nil, sql, this.mapRow)
+	if err != nil {
+        if this.log != nil {
+            this.log.Errorf("[DB.ERR]%s.GetAll %%v",err)
+        }
+		return
+	}
+	for _, obj = range arradd {
+		e = obj.(%s)
+		eList = append(eList, e)
+	}
+	ok = true
+	return
+}
+`,
+
+			sd.GetDBStorageName(), sd.StructName,
+			sd.JoinMysqlFieldNameList(","), sd.GetMysqlTableName(),
+			sd.StructName,
+			sd.GetDBStorageName(),
+
+			sd.StructName,
+		)
+	return s
+
+}
 func (sd StructDescription) GenerateDBMultGet() string {
 	var multKey string
 	pkList := sd.GetPKFieldList()
-	if len(pkList) > 2 {
+	if len(pkList) > 2 || len(pkList) == 0 {
 		return ""
 	}
 
@@ -507,6 +557,10 @@ func (sd StructDescription) GenerateDBMultUpdate() string {
 }
 func (sd StructDescription) GenerateDBDelete() string {
 	pkList := sd.GetPKFieldList()
+	if len(pkList) == 0 {
+		return ""
+	}
+
 	var keySum string = "nil"
 	if isTypeKeySum(pkList[0].FieldGoType) {
 		keySum = pkList[0].FieldName
@@ -540,6 +594,9 @@ func (sd StructDescription) GenerateDBMultDelete() string {
 	var multKey string
 	pkList := sd.GetPKFieldList()
 	if len(pkList) > 2 {
+		return ""
+	}
+	if len(pkList) == 0 {
 		return ""
 	}
 

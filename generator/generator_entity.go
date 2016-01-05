@@ -35,7 +35,9 @@ var ___importTime%s time.Time
 var ___importBit%s bit.BitInt32
 var ___importGoutils%s goutils.Int32List
 var ___importKey%s key.KeyUint64
-`, sd.StructName, sd.StructName, sd.StructName, sd.StructName)
+var ___importBytes%s bytes.Buffer
+
+`, sd.StructName, sd.StructName, sd.StructName, sd.StructName, sd.StructName)
 
 	// for _, sd := range structDescriptionList {
 	// 生成结构体
@@ -119,8 +121,12 @@ var ___importKey%s key.KeyUint64
 
 	// }
 
-	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	formatSrc, err := format.Source([]byte(s))
+	if err != nil {
+		outputF.WriteString(s)
+	} else {
+		outputF.WriteString(string(formatSrc))
+	}
 
 }
 func (sd StructDescription) generateNewEntity() (s string) {
@@ -148,6 +154,11 @@ func (sd StructDescription) generateNewEntity() (s string) {
 	return
 }
 func (sd StructDescription) generateEntityMap() (s string) {
+	pkList := sd.GetPKFieldList()
+	if len(pkList) == 0 || len(pkList) > 2 {
+		return ""
+	}
+
 	return fmt.Sprintf("type %s map[%s]%s\n\n", sd.GetSuggestMapName(), sd.GetSuggestMapKey(), sd.StructName)
 }
 
@@ -267,6 +278,11 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 	return
 }
 func (sd StructDescription) GenerateInsertForMap() (goCode string) {
+
+	pkList := sd.GetPKFieldList()
+	if len(pkList) == 0 || len(pkList) > 2 {
+		return ""
+	}
 
 	var values string
 	var valuesPos string
@@ -389,6 +405,10 @@ func (eMap %sMap) GetInsertSql() (sql string) {
 	return
 }
 func (sd StructDescription) GenerateUpdate() (goCode string) {
+	if len(sd.GetPKFieldList()) == 0 {
+		return
+	}
+
 	goCode += fmt.Sprintf("func (e %s) GetUpdateSql() (sql string) {\n", sd.StructName)
 	goCode += fmt.Sprintf("    if !e.IsFlagDirty(){\n")
 	goCode += fmt.Sprintf("        return\n")

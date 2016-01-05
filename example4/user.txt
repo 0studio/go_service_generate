@@ -9,3 +9,7 @@ type User4 struct {
 	name string `mysql:"default=\"'hello'\",name=helloName,type=varchar(10)"`
 
 }
+type User5 struct {
+	age  int `go:"default=11" mysql:"default=11"`
+	f64  float64
+}

@@ -10,7 +10,7 @@ import (
 
 func (sd StructDescription) GenerateService(property Property, srcDir string) {
 	pkList := sd.GetPKFieldList()
-	if len(pkList) > 2 {
+	if len(pkList) > 2 || len(pkList) == 0 {
 		return
 	}
 
@@ -37,8 +37,12 @@ func (sd StructDescription) GenerateService(property Property, srcDir string) {
 	s = strings.Replace(s, "__ClearLocalDeclard__", clearLocalDeclare, -1)
 	s = strings.Replace(s, "__ClearLocalImplments__", clearLocalImpl, -1)
 
-	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	formatSrc, err := format.Source([]byte(s))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 
 }
 func (sd StructDescription) generateServiceGetDefault() (declare string, implements string) {
