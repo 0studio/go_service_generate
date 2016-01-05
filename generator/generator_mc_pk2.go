@@ -36,7 +36,11 @@ func (sd StructDescription) generateMCPK2(pkField, pk2Field FieldDescriptoin, pr
 	s += sd.generateMCPK2getRawKey(pkField, pk2Field)
 
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 
 	return true
 }

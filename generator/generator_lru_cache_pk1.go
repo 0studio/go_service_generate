@@ -42,7 +42,11 @@ func (sd StructDescription) generateLRUCache1PK(pkField FieldDescriptoin, proper
 	s = strings.Replace(s, "__PKTypeList__", pkTypeList, -1)
 
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 
 	return true
 }

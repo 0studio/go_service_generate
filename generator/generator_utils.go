@@ -886,6 +886,9 @@ func printStack(x interface{}, log logger.Logger) {
 
 `, property.PackageName)
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
-
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 }

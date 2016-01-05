@@ -34,7 +34,11 @@ var ___importKeyS%s key.KeyUint64
 	s += sd.generateEntitySerial(property, srcDir)
 	s += sd.generateEntityUnSerial(property, srcDir)
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 }
 func (sd StructDescription) generateEntitySerial(property Property, srcDir string) (goCode string) {
 	var fieldStr string

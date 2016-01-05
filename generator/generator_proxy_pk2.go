@@ -34,7 +34,11 @@ func (sd StructDescription) generateProxyPK2(pk1Field, pk2Field FieldDescriptoin
 	s = strings.Replace(s, "__PK2TypeList__", pk2TypeList, -1)
 
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 
 	return true
 }

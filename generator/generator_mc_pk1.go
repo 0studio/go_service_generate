@@ -66,7 +66,11 @@ func (sd StructDescription) generateMCPK1(pkField FieldDescriptoin, property Pro
 	s = strings.Replace(s, "__PKTypeList__", pkTypeList, -1)
 
 	formatSrc, _ := format.Source([]byte(s))
-	outputF.WriteString(string(formatSrc))
+	if err == nil {
+		outputF.WriteString(string(formatSrc))
+	} else {
+		outputF.WriteString(s)
+	}
 
 	return true
 }
