@@ -183,6 +183,22 @@ func New__Entity__ServiceCacheAndDB(dt databasetemplate.DatabaseTemplate, log lo
 	return __LowercaseEntity__Service
 
 }
+// memcache and db
+// log can be nil
+func New__Entity__ServiceMCAndDB(dt databasetemplate.DatabaseTemplate, mcClient memcache.Client, log logger.Logger, createTable bool) __Entity__Service {
+	mcStorage := NewMC__Entity__Storage(mcClient, Memcache_Expired_Seconds, Memcache_Prefix)
+	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
+	__LowercaseEntity__Service = &__Entity__ServiceImpl{
+		lruMCStorage: mcStorage,
+		mcDBStorage:  NewStorageProxy(mcStorage, dbStorage),
+		__Entity__Storage:NewStorageProxy(mcStorage, dbStorage),
+        log:               log,
+	}
+
+	return __LowercaseEntity__Service
+}
+
+
 
 type __Entity__ServiceImpl struct {
 	__Entity__Storage
