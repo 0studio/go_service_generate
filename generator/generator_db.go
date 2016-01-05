@@ -111,7 +111,10 @@ func (sd StructDescription) generateDBMapRowSpicialType() (s string) {
 			s += fmt.Sprintf("    var %s int64\n", field.FieldName)
 		} else if field.IsIntList() {
 			s += fmt.Sprintf("    var %s string\n", field.FieldName)
+		} else if field.IsStringList() {
+			s += fmt.Sprintf("    var %s string\n", field.FieldName)
 		}
+
 	}
 	return
 }
@@ -154,7 +157,10 @@ func (sd StructDescription) generateDBMapRowSpicialTypeTrans() (s string) {
 			default:
 				fmt.Println("should be here generateDBMapRowSpicialTypeTrans", field.FieldGoType)
 			}
+		} else if field.IsStringList() {
+			s += fmt.Sprintf("    e.%s = stringSplit(%s, `,`)\n", field.FieldName, field.FieldName)
 		}
+
 	}
 	return
 }
@@ -166,6 +172,8 @@ func (sd StructDescription) generateDBMapRowScan() (s string) {
 		} else if field.IsTimeInt() {
 			s += fmt.Sprintf("        &%s,\n", field.FieldName)
 		} else if field.IsIntList() {
+			s += fmt.Sprintf("        &%s,\n", field.FieldName)
+		} else if field.IsStringList() {
 			s += fmt.Sprintf("        &%s,\n", field.FieldName)
 		} else {
 			s += fmt.Sprintf("        &e.%s,\n", field.FieldName)

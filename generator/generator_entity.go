@@ -176,6 +176,9 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 		if field.IsIntList() {
 			goCode += "'%s'"
 		}
+		if field.IsStringList() {
+			goCode += "'%s'"
+		}
 
 		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "timestamp" {
 			goCode += "%s"
@@ -231,6 +234,9 @@ func (sd StructDescription) GenerateInsert() (goCode string) {
 				fmt.Println("should be here generateDBMapRowSpicialTypeTrans", field.FieldGoType)
 			}
 		}
+		if field.IsStringList() {
+			goCode += fmt.Sprintf("        stringListJoin(e.%s, `,`)", field.FieldName)
+		}
 
 		if field.IsNumber() {
 			goCode += fmt.Sprintf("        e.%s", field.FieldName)
@@ -279,6 +285,9 @@ func (sd StructDescription) GenerateInsertForMap() (goCode string) {
 			valuesPos += "%f"
 		}
 		if field.IsIntList() {
+			valuesPos += "'%s'"
+		}
+		if field.IsStringList() {
 			valuesPos += "'%s'"
 		}
 
@@ -334,6 +343,8 @@ func (sd StructDescription) GenerateInsertForMap() (goCode string) {
 			default:
 				fmt.Println("should be here generateDBMapRowSpicialTypeTrans", field.FieldGoType)
 			}
+		} else if field.IsStringList() {
+			values += fmt.Sprintf("        stringListJoin(e.%s, `,`)", field.FieldName)
 		} else if field.IsNumber() {
 			values += fmt.Sprintf("        e.%s", field.FieldName)
 		} else if field.FieldGoType == "time.Time" && field.GetMysqlType() == "timestamp" {

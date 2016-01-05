@@ -30,6 +30,7 @@ var DefaultMysqlTypeMap map[string]string = map[string]string{
 	"[]uint8":           "varchar(255)",
 	"[]uint16":          "varchar(255)",
 	"[]uint64":          "varchar(255)",
+	"[]string":          "varchar(255)",
 	"goutils.Int32List": "varchar(255)",
 	"goutils.Int16List": "varchar(255)",
 	"goutils.IntList":   "varchar(255)",
@@ -65,6 +66,7 @@ var DefaultMysqlDefaultValueMap map[string]string = map[string]string{
 	"[]uint8":           "''",
 	"[]uint16":          "''",
 	"[]uint64":          "''",
+	"[]string":          "''",
 	"goutils.Int32List": "''",
 	"goutils.Int16List": "''",
 	"goutils.IntList":   "''",
@@ -119,6 +121,13 @@ func (fd FieldDescriptoin) IsInt() bool {
 		return true
 	}
 	return false
+}
+func (fd FieldDescriptoin) IsStringList() bool {
+	if fd.FieldGoType == "[]string" {
+		return true
+	}
+	return false
+
 }
 func (fd FieldDescriptoin) IsIntList() bool {
 	if fd.FieldGoType == "[]int" ||
@@ -243,6 +252,9 @@ func (fd FieldDescriptoin) GetFieldPosStr() string {
 	if fd.IsIntList() {
 		return "'%s'"
 	}
+	if fd.IsStringList() {
+		return "'%s'"
+	}
 
 	// should be here
 	fmt.Println("should be here GetFieldPosStr", fd.FieldName, fd.FieldGoType)
@@ -306,6 +318,9 @@ func (fd FieldDescriptoin) GetFieldPosValue() string {
 		default:
 			fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
 		}
+	}
+	if fd.IsStringList() {
+		return fmt.Sprintf("stringListJoin(e.%s, `,`)", fd.FieldName)
 	}
 
 	fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)

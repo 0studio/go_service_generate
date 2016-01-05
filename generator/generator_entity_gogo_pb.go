@@ -43,6 +43,7 @@ var DefaultProtoBufTypeMap map[string]pbInfo = map[string]pbInfo{
 	"[]uint8":           pbInfo{goType: "[]uint32", dataType: "uint32", reqType: "repeated"},
 	"[]uint16":          pbInfo{goType: "[]uint32", dataType: "uint32", reqType: "repeated"},
 	"[]uint64":          pbInfo{goType: "[]uint64", dataType: "uint64", reqType: "repeated"},
+	"[]string":          pbInfo{goType: "[]string", dataType: "string", reqType: "repeated"},
 	"goutils.Int32List": pbInfo{goType: "[]int32", dataType: "int32", reqType: "repeated"},
 	"goutils.Int16List": pbInfo{goType: "[]int32", dataType: "int32", reqType: "repeated"},
 	"goutils.IntList":   pbInfo{goType: "[]int64", dataType: "int64", reqType: "repeated"},

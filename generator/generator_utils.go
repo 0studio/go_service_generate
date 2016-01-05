@@ -65,6 +65,13 @@ func newTime(unix int64) (t time.Time){
         return time.Unix(unix,0)
     }
 }
+func stringListJoin(sList []string, separator string) string {
+	return strings.Join(sList, separator)
+}
+func stringSplit(s string, separator string) []string {
+	return strings.Split(s, separator)
+}
+
 
 func uint64ListJoin(intLi []uint64, separator string) string {
 	strLi := make([]string, len(intLi))
