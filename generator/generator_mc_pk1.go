@@ -26,23 +26,23 @@ func (sd StructDescription) generateMCPK1(pkField FieldDescriptoin, property Pro
 	if pkField.FieldGoType == "string" {
 		pkToString = "k"
 	} else if pkField.FieldGoType == "int" {
-		pkToString = "str2int(k)"
+		pkToString = "int2str(k)"
 	} else if pkField.FieldGoType == "int8" {
-		pkToString = "str2int8(k)"
+		pkToString = "int82str(k)"
 	} else if pkField.FieldGoType == "int16" {
-		pkToString = "str2int16(k)"
+		pkToString = "int162str(k)"
 	} else if pkField.FieldGoType == "int32" {
-		pkToString = "str2int32(k)"
+		pkToString = "int322str(k)"
 	} else if pkField.FieldGoType == "int64" {
-		pkToString = "str2int64(k)"
+		pkToString = "int642str(k)"
 	} else if pkField.FieldGoType == "uint8" {
-		pkToString = "str2uint8(k)"
+		pkToString = "uint82str(k)"
 	} else if pkField.FieldGoType == "uint16" {
-		pkToString = "str2uint16(k)"
+		pkToString = "uint162str(k)"
 	} else if pkField.FieldGoType == "uint32" {
-		pkToString = "str2uint32(k)"
+		pkToString = "uint322str(k)"
 	} else if pkField.FieldGoType == "uint64" {
-		pkToString = "str2uint64(k)"
+		pkToString = "uint642str(k)"
 	} else {
 		pkToString = "k.String()"
 	}
@@ -51,6 +51,24 @@ func (sd StructDescription) generateMCPK1(pkField FieldDescriptoin, property Pro
 	var pkFromString string
 	if pkField.FieldGoType == "string" {
 		pkFromString = "k=token"
+	} else if pkField.FieldGoType == "int" {
+		pkFromString = "k = str2int(token)"
+	} else if pkField.FieldGoType == "int8" {
+		pkFromString = "k = str2int8(token)"
+	} else if pkField.FieldGoType == "int16" {
+		pkFromString = "k = str2int16(token)"
+	} else if pkField.FieldGoType == "int32" {
+		pkFromString = "k = str2int32(token)"
+	} else if pkField.FieldGoType == "int64" {
+		pkFromString = "k = str2int64(token)"
+	} else if pkField.FieldGoType == "uint8" {
+		pkFromString = "k = str2uint8(token)"
+	} else if pkField.FieldGoType == "uint16" {
+		pkFromString = "k = str2uint16(token)"
+	} else if pkField.FieldGoType == "uint32" {
+		pkFromString = "k = str2uint32(token)"
+	} else if pkField.FieldGoType == "uint64" {
+		pkFromString = "k = str2uint64(token)"
 	} else {
 		pkFromString = "k.FromString(token)"
 	}
