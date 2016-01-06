@@ -74,7 +74,7 @@ type __Entity__StorageProxy struct {
 	backupStorage   __Entity__Storage
 }
 
-func NewStorageProxy(prefered, backup __Entity__Storage) __Entity__Storage {
+func NewStorageProxy__Entity__(prefered, backup __Entity__Storage) __Entity__Storage {
 	return __Entity__StorageProxy{
 		preferedStorage: prefered,
 		backupStorage:   backup,

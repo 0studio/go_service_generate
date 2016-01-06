@@ -162,12 +162,12 @@ func New__Entity__Service(dt databasetemplate.DatabaseTemplate, mcClient memcach
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
 		lruStorage:   lruStorage,
-		lruMCStorage: NewStorageProxy(lruStorage, mcStorage),
-		mcDBStorage:  NewStorageProxy(mcStorage, dbStorage),
+		lruMCStorage: NewStorageProxy__Entity__(lruStorage, mcStorage),
+		mcDBStorage:  NewStorageProxy__Entity__(mcStorage, dbStorage),
         log:               log,
 	}
 
-	__LowercaseEntity__Service.__Entity__Storage = NewStorageProxy(__LowercaseEntity__Service.lruMCStorage, dbStorage)
+	__LowercaseEntity__Service.__Entity__Storage = NewStorageProxy__Entity__(__LowercaseEntity__Service.lruMCStorage, dbStorage)
 	return __LowercaseEntity__Service
 }
 
@@ -180,7 +180,7 @@ func New__Entity__ServiceCacheAndDB(dt databasetemplate.DatabaseTemplate, log lo
 		lruStorage:        lruStorage,
 		lruMCStorage:      lruStorage,
 		mcDBStorage:       dbStorage,
-		__Entity__Storage: NewStorageProxy(lruStorage, dbStorage),
+		__Entity__Storage: NewStorageProxy__Entity__(lruStorage, dbStorage),
         log:               log,
 	}
 
@@ -194,8 +194,8 @@ func New__Entity__ServiceMCAndDB(dt databasetemplate.DatabaseTemplate, mcClient 
 	dbStorage := NewDB__Entity__Storage(dt, log, createTable)
 	__LowercaseEntity__Service = &__Entity__ServiceImpl{
 		lruMCStorage: mcStorage,
-		mcDBStorage:  NewStorageProxy(mcStorage, dbStorage),
-		__Entity__Storage:NewStorageProxy(mcStorage, dbStorage),
+		mcDBStorage:  NewStorageProxy__Entity__(mcStorage, dbStorage),
+		__Entity__Storage:NewStorageProxy__Entity__(mcStorage, dbStorage),
         log:               log,
 	}
 
