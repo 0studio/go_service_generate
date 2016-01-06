@@ -276,7 +276,7 @@ func (sd StructDescription) GenerateDBAdd() string {
         if this.log != nil {
             this.log.Errorf("[DB.ERR]%s.Add %%v %%v %%s",*e,err,sql)
         }
-        return
+        return false
      }
 	e.ClearFlag()
 	return err == nil
