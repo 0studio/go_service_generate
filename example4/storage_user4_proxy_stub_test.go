@@ -19,8 +19,8 @@ func TestProxyUser4Storage(t *testing.T) {
 
 	local := NewLRUCacheUser4Storage(1, 10)
 	mc := NewMCUser4Storage(memcache.NewMockClient(), 10, "user4")
-	p := NewStorageProxy(local, mc)
-	store := NewStorageProxy(p, NewDBUser4Storage(getMockDB(), logger.NewStdoutLogger(), true))
+	p := NewStorageProxyUser4(local, mc)
+	store := NewStorageProxyUser4(p, NewDBUser4Storage(getMockDB(), logger.NewStdoutLogger(), true))
 
 	ok := store.Add(&u, now)
 	assert.True(t, ok)
@@ -63,8 +63,8 @@ func TestProxyUser4StorageMulti(t *testing.T) {
 
 	local := NewLRUCacheUser4Storage(1, 10)
 	mc := NewMCUser4Storage(memcache.NewMockClient(), 10, "user4")
-	p := NewStorageProxy(local, mc)
-	store := NewStorageProxy(p, NewDBUser4Storage(getMockDB(), logger.NewStdoutLogger(), true))
+	p := NewStorageProxyUser4(local, mc)
+	store := NewStorageProxyUser4(p, NewDBUser4Storage(getMockDB(), logger.NewStdoutLogger(), true))
 
 	ok := store.MultiAdd(uMap, now)
 	assert.True(t, ok)
