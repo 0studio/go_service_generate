@@ -92,13 +92,25 @@ func (sd StructDescription) generateServiceGetAll() (declare string, implements 
 
 func (sd StructDescription) generateServiceClearLocal() (declare string, implements string) {
 	pkList := sd.GetPKFieldList()
-	if len(pkList) != 2 {
+	if len(pkList) == 1 {
+		declare = fmt.Sprintf("    ClearLocal(%s %s, now time.Time)",
+			LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType)
+		implements =
+			fmt.Sprintf(`func (impl *%sServiceImpl) ClearLocal(%s %s, now time.Time) {
+    if impl.lruStorage != nil {
+		impl.lruStorage.Delete(%s)
+    }
+}
+`, sd.StructName, LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType,
+				LowerCaseFirstChar(pkList[0].FieldName))
+
 		return
-	}
-	declare = fmt.Sprintf("    ClearLocal(%s %s, now time.Time)",
-		LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType)
-	implements =
-		fmt.Sprintf(`func (impl *%sServiceImpl) ClearLocal(%s %s, now time.Time) {
+
+	} else if len(pkList) == 2 {
+		declare = fmt.Sprintf("    ClearLocal(%s %s, now time.Time)",
+			LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType)
+		implements =
+			fmt.Sprintf(`func (impl *%sServiceImpl) ClearLocal(%s %s, now time.Time) {
 	idList, ok := impl.GetIdListByPK1(%s, now)
 	if !ok {
 		return
@@ -110,10 +122,13 @@ func (sd StructDescription) generateServiceClearLocal() (declare string, impleme
 
 }
 `, sd.StructName, LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType,
-			LowerCaseFirstChar(pkList[0].FieldName),
-			LowerCaseFirstChar(pkList[0].FieldName),
-			LowerCaseFirstChar(pkList[0].FieldName))
+				LowerCaseFirstChar(pkList[0].FieldName),
+				LowerCaseFirstChar(pkList[0].FieldName),
+				LowerCaseFirstChar(pkList[0].FieldName))
 
+		return
+
+	}
 	return
 }
 
