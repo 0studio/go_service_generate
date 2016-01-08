@@ -9,6 +9,7 @@ demo:
 	cd example3;go build;go test
 	go run main.go example4/user.txt
 	cd example4;go build; go test
+	go install github.com/0studio/go_service_generator
 
 get-deps:
 	go get github.com/0studio/goutils
