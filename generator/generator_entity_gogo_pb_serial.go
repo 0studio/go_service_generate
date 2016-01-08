@@ -44,7 +44,12 @@ func (sd StructDescription) generateEntitySerial(property Property, srcDir strin
 	var fieldStr string
 	for _, fd := range sd.Fields {
 		if fd.IsEqualableType() {
-			fieldStr += fmt.Sprintf("    pb.%s = %s(e.%s)\n", Camelize(fd.FieldName), fd.getPBInfo().goType, fd.FieldName)
+			if fd.getPBInfo().goType != fd.FieldGoType {
+				fieldStr += fmt.Sprintf("    pb.%s = %s(e.%s)\n", Camelize(fd.FieldName), fd.getPBInfo().goType, fd.FieldName)
+			} else {
+				fieldStr += fmt.Sprintf("    pb.%s = e.%s\n", Camelize(fd.FieldName), fd.FieldName)
+			}
+
 		} else if fd.IsStringList() {
 			fieldStr += fmt.Sprintf("    pb.%s = %s(e.%s)\n", Camelize(fd.FieldName), fd.getPBInfo().goType, fd.FieldName)
 		} else if fd.IsTime() {
@@ -121,7 +126,12 @@ func (sd StructDescription) generateEntityUnSerial(property Property, srcDir str
 	var fieldStr string
 	for _, fd := range sd.Fields {
 		if fd.IsEqualableType() {
-			fieldStr += fmt.Sprintf("    e.%s = %s(pb.Get%s())\n", fd.FieldName, fd.FieldGoType, Camelize(fd.FieldName))
+			if fd.FieldGoType != fd.getPBInfo().goType {
+				fieldStr += fmt.Sprintf("    e.%s = %s(pb.Get%s())\n", fd.FieldName, fd.FieldGoType, Camelize(fd.FieldName))
+			} else {
+				fieldStr += fmt.Sprintf("    e.%s = pb.Get%s()\n", fd.FieldName, Camelize(fd.FieldName))
+			}
+
 		} else if fd.IsStringList() {
 			fieldStr += fmt.Sprintf("    e.%s = %s(pb.Get%s())\n", fd.FieldName, fd.FieldGoType, Camelize(fd.FieldName))
 		} else if fd.IsTime() {
