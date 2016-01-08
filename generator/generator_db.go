@@ -40,6 +40,7 @@ var ___importGoutilsDB%s goutils.Int32List
 	s += sd.GenerateDBCreateTable()
 	s += sd.GenerateDBMapRow()
 	s += sd.GenerateDBGetAll()
+	s += sd.GenerateDBGetAllSql()
 	s += sd.GenerateDBGet()
 	s += sd.GenerateDBAdd()
 	s += sd.GenerateDBMultiAdd()
@@ -385,6 +386,22 @@ func (sd StructDescription) GenerateDBSet() string {
 }
 `, sd.GetDBStorageName(), sd.StructName, keySum, sd.GetDBStorageName())
 	return s
+}
+func (sd StructDescription) GenerateDBGetAllSql() string {
+
+	s :=
+		fmt.Sprintf(
+			`func (this *%s) GetAllSql() (sql string) {
+	sql = "select %s from %s"
+	return
+}
+`,
+
+			sd.GetDBStorageName(),
+			sd.JoinMysqlFieldNameList(","), sd.GetMysqlTableName(),
+		)
+	return s
+
 }
 func (sd StructDescription) GenerateDBGetAll() string {
 
