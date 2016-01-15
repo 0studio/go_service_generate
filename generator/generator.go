@@ -362,6 +362,66 @@ func (fd FieldDescriptoin) GetFieldPosValue() string {
 
 	return ""
 }
+func (fd FieldDescriptoin) GetFieldPosValue4Args() string {
+	if fd.IsBool() {
+		return fmt.Sprintf("bool2int(e.%s)", fd.FieldName)
+	}
+
+	if fd.IsNumber() {
+		return fmt.Sprintf("e.%s", fd.FieldName)
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "timestamp" {
+		return fmt.Sprintf("e.%s", fd.FieldName)
+	}
+	if fd.FieldGoType == "time.Time" && fd.GetMysqlType() == "datetime" {
+		return fmt.Sprintf("e.%s", fd.FieldName)
+	}
+	if fd.IsTimeInt() {
+		return fmt.Sprintf("formatTimeUnix(e.%s)", fd.FieldName)
+	}
+	if fd.FieldGoType == "string" {
+		return fmt.Sprintf("e.%s", fd.FieldName)
+	}
+	if fd.IsIntList() {
+		switch fd.FieldGoType {
+		case "[]int":
+			return fmt.Sprintf("intListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int8":
+			return fmt.Sprintf("int8ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int16":
+			return fmt.Sprintf("int16ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int32":
+			return fmt.Sprintf("int32ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]int64":
+			return fmt.Sprintf("int64ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint8":
+			return fmt.Sprintf("uint8ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint16":
+			return fmt.Sprintf("uint16ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint32":
+			return fmt.Sprintf("uint32ListJoin(e.%s, `,`)", fd.FieldName)
+		case "[]uint64":
+			return fmt.Sprintf("uint64ListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.Int32List":
+			return fmt.Sprintf("int32ListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.Int16List":
+			return fmt.Sprintf("int16ListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.IntList":
+			return fmt.Sprintf("intListJoin(e.%s, `,`)", fd.FieldName)
+		case "goutils.Int8List":
+			return fmt.Sprintf("int8ListJoin(e.%s, `,`)", fd.FieldName)
+		default:
+			fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
+		}
+	}
+	if fd.IsStringList() {
+		return fmt.Sprintf("stringListJoin(e.%s, `,`)", fd.FieldName)
+	}
+
+	fmt.Println("should be here GetFieldPosValue", fd.FieldGoType, fd.FieldName)
+
+	return ""
+}
 func (fd FieldDescriptoin) GetFieldListPosValue() string {
 	if fd.IsString() {
 		switch fd.FieldGoType {
@@ -482,6 +542,17 @@ func (sd StructDescription) GetWherePosValue() (sql string) {
 	pkList := sd.GetPKFieldList()
 	for idx, field := range pkList {
 		sql += field.GetFieldPosValue()
+		if idx != len(pkList)-1 {
+			sql += " , "
+
+		}
+	}
+	return
+}
+func (sd StructDescription) GetWherePosValue2() (sql string) {
+	pkList := sd.GetPKFieldList()
+	for idx, field := range pkList {
+		sql += field.GetFieldPosValue4Args()
 		if idx != len(pkList)-1 {
 			sql += " , "
 

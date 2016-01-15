@@ -369,17 +369,17 @@ func (sd StructDescription) GenerateDBSet() string {
 	if e.IsFlagNew() {
 		return this.Add(e, now)
 	}
-	sql := e.GetUpdateSql()
+	sql,args := e.GetUpdateSqlArgs()
 	if sql == "" {
 		return true
 	}
-	err := this.DatabaseTemplate.Exec(%s, sql)
+	err := this.DatabaseTemplate.Exec(%s, sql,args...)
 	succ = (err == nil)
 	if succ {
 		e.ClearFlag()
 	}else{
         if this.log != nil {
-            this.log.Errorf("[DB.ERR]%s.Set %%v %%v",*e,err)
+            this.log.Errorf("[DB.ERR]%s.Set %%v %%v %%v",*e,err,args)
         }
    }
 	return

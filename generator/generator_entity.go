@@ -117,6 +117,8 @@ var ___importBytes%s bytes.Buffer
 	s += "\n"
 	s += sd.GenerateUpdate()
 	s += "\n"
+	s += sd.GenerateUpdateWithArgs()
+	s += "\n"
 
 	s += sd.GenerateInsertForMap()
 	s += sd.GenerateInsertForMapWithArgs()
@@ -579,6 +581,53 @@ func (sd StructDescription) GenerateUpdate() (goCode string) {
 	}
 
 	goCode += fmt.Sprintf("    sql=fmt.Sprintf(`update %s set %%s where %s`, updateBuffer.String(),%s)\n", sd.StructName, sd.GetWherePosStr(), sd.GetWherePosValue())
+	goCode += "    return\n"
+	goCode += "}\n"
+	return
+}
+func (sd StructDescription) GenerateUpdateWithArgs() (goCode string) {
+	pkList := sd.GetPKFieldList()
+	if len(pkList) == 0 {
+		return
+	}
+
+	goCode += fmt.Sprintf("func (e %s) GetUpdateSqlArgs() (sql string,args []interface{}) {\n", sd.StructName)
+	goCode += fmt.Sprintf("    if !e.IsFlagDirty(){\n")
+	goCode += fmt.Sprintf("        return\n")
+	goCode += fmt.Sprintf("    }\n\n")
+	goCode += fmt.Sprintf("    if e.IsFlagNew(){\n")
+	goCode += fmt.Sprintf("        return\n")
+	goCode += fmt.Sprintf("    }\n\n")
+
+	goCode += fmt.Sprintf("    var isFirstField bool = true\n")
+	goCode += fmt.Sprintf("    var updateBuffer bytes.Buffer\n")
+	goCode += fmt.Sprintf(fmt.Sprintf("    args = make([]interface{},0,e.flag.GetTrueLen()+%d)\n\n", len(pkList)))
+
+	for _, field := range sd.Fields {
+		if field.IsPK() {
+			continue
+		}
+
+		goCode += fmt.Sprintf("    if e.Is%sModified(){\n", Camelize(field.FieldName))
+		goCode += fmt.Sprintf("        if !isFirstField{\n")
+		goCode += fmt.Sprintf("            updateBuffer.WriteString(`,`)\n")
+		goCode += fmt.Sprintf("        }\n")
+		goCode += fmt.Sprintf("        isFirstField=false\n")
+		goCode += fmt.Sprintf("        updateBuffer.WriteString(`%s=?`)\n", field.GetMysqlFieldName())
+		goCode += fmt.Sprintf("        args = append(args,%s)\n", field.GetFieldPosValue4Args())
+
+		goCode += "    }\n"
+
+		// if idx != len(sd.Fields)-1 {
+		// 	goCode += ","
+		// }
+	}
+
+	for _, field := range pkList {
+		goCode += fmt.Sprintf("        args = append(args,%s)\n", field.GetFieldPosValue4Args())
+	}
+
+	goCode += fmt.Sprintf("    sql=fmt.Sprintf(`update %s set %%s where %s`, updateBuffer.String())\n", sd.StructName, sd.GetWherePosStr2())
 	goCode += "    return\n"
 	goCode += "}\n"
 	return
