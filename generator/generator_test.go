@@ -28,7 +28,7 @@ func TestGenerateCreateTableSql(t *testing.T) {
 		"`id` bigint NOT NULL DEFAULT 1,\n" +
 		"`name` varchar(100) NOT NULL DEFAULT '',\n" +
 		"primary key (id)" +
-		");"
+		")ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 	assert.Equal(t, expectSql, createTableSql)
 
 }

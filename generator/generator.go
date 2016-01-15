@@ -200,6 +200,20 @@ func (fd FieldDescriptoin) GetMysqlType() string {
 	}
 	return DefaultMysqlTypeMap[fd.FieldGoType]
 }
+func (fd FieldDescriptoin) GetMysqlEngine() string {
+	mysqlType := fd.MysqlTagFieldList.GetValue("engine")
+	if mysqlType != "" {
+		return mysqlType
+	}
+	return "InnoDB"
+}
+func (fd FieldDescriptoin) GetMysqlCharSet() string {
+	mysqlType := fd.MysqlTagFieldList.GetValue("charset")
+	if mysqlType != "" {
+		return mysqlType
+	}
+	return "utf8"
+}
 func (fd FieldDescriptoin) GetMysqlKey() string {
 	key := fd.MysqlTagFieldList.GetValue("key")
 	return key
@@ -474,7 +488,7 @@ func (sd StructDescription) GenerateCreateTableSql() (sql string, err error) {
 
 	}
 
-	sql += ");"
+	sql += fmt.Sprintf(")ENGINE=%s DEFAULT CHARSET=%s;", sd.Fields[0].GetMysqlEngine(), sd.Fields[0].GetMysqlCharSet())
 	return
 }
 
