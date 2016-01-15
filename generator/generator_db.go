@@ -271,8 +271,8 @@ func (sd StructDescription) GenerateDBAdd() string {
 	s :=
 		fmt.Sprintf(
 			`func (this *%s) Add(e *%s, now time.Time) bool {
-	sql := e.GetInsertSql()
-	err := this.DatabaseTemplate.Exec(%s, sql)
+	sql,args := e.GetInsertSqlWithArgs()
+	err := this.DatabaseTemplate.Exec(%s, sql,args...)
      if err != nil {
         if this.log != nil {
             this.log.Errorf("[DB.ERR]%s.Add %%v %%v %%s",*e,err,sql)

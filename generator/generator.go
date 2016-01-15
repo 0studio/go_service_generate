@@ -214,6 +214,27 @@ func (fd FieldDescriptoin) GetMysqlCharSet() string {
 	}
 	return "utf8"
 }
+func (fd FieldDescriptoin) IsMysqlFieldIgnore() bool {
+	return fd.MysqlTagFieldList.Contains("ignore")
+}
+
+func (sd StructDescription) GetMysqlFieldLen() (n int) {
+	for _, fd := range sd.Fields {
+		if !fd.IsMysqlFieldIgnore() {
+			n++
+		}
+	}
+	return
+}
+func (sd StructDescription) GetMysqlFieldList() (list []FieldDescriptoin) {
+	for _, fd := range sd.Fields {
+		if !fd.IsMysqlFieldIgnore() {
+			list = append(list, fd)
+		}
+	}
+	return
+}
+
 func (fd FieldDescriptoin) GetMysqlKey() string {
 	key := fd.MysqlTagFieldList.GetValue("key")
 	return key

@@ -110,6 +110,7 @@ var ___importBytes%s bytes.Buffer
 	s += "}\n"
 
 	s += sd.GenerateInsert()
+	s += sd.GenerateInsertWithArgs()
 
 	s += "\n"
 	s += sd.GenerateCreateTableFunc()
@@ -168,6 +169,86 @@ func makeString(s string, n int) (r string) {
 	}
 	return
 
+}
+func (sd StructDescription) GenerateInsertWithArgs() (goCode string) {
+	goCode += fmt.Sprintf("func (e %s) GetInsertSqlWithArgs() (sql string,args []interface{}) {\n", sd.StructName)
+	goCode += fmt.Sprintf("    sql = \"insert into `%s`(", sd.GetMysqlTableName())
+	goCode += sd.JoinMysqlFieldNameList(",")
+	goCode += ") values ("
+	for idx, _ := range sd.Fields {
+		goCode += "?"
+		if idx != len(sd.Fields)-1 {
+			goCode += ","
+		}
+	}
+	goCode += ");\"\n"
+	goCode += fmt.Sprintf("    args = []interface{}{\n")
+	for idx, field := range sd.GetMysqlFieldList() {
+		if field.IsBool() {
+			goCode += fmt.Sprintf("        bool2int(e.%s)", field.FieldName)
+		}
+		if field.IsIntList() {
+			switch field.FieldGoType {
+			case "[]int":
+				goCode += fmt.Sprintf("        intListJoin(e.%s, `,`)", field.FieldName)
+			case "[]int8":
+				goCode += fmt.Sprintf("        int8ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]int16":
+				goCode += fmt.Sprintf("        int16ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]int32":
+				goCode += fmt.Sprintf("        int32ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]int64":
+				goCode += fmt.Sprintf("        int64ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]uint8":
+				goCode += fmt.Sprintf("        uint8ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]uint16":
+				goCode += fmt.Sprintf("        uint16ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]uint32":
+				goCode += fmt.Sprintf("        uint32ListJoin(e.%s, `,`)", field.FieldName)
+			case "[]uint64":
+				goCode += fmt.Sprintf("        uint64ListJoin(e.%s, `,`)", field.FieldName)
+			case "goutils.Int32List":
+				goCode += fmt.Sprintf("        int32ListJoin(e.%s, `,`)", field.FieldName)
+			case "goutils.Int16List":
+				goCode += fmt.Sprintf("        int16ListJoin(e.%s, `,`)", field.FieldName)
+			case "goutils.IntList":
+				goCode += fmt.Sprintf("        intListJoin(e.%s, `,`)", field.FieldName)
+			case "goutils.Int8List":
+				goCode += fmt.Sprintf("        int8ListJoin(e.%s, `,`)", field.FieldName)
+			default:
+				fmt.Println("should be here generateDBMapRowSpicialTypeTrans", field.FieldGoType)
+			}
+		}
+		if field.IsStringList() {
+			goCode += fmt.Sprintf("        stringListJoin(e.%s, `,`)", field.FieldName)
+		}
+
+		if field.IsNumber() {
+			goCode += fmt.Sprintf("        e.%s", field.FieldName)
+		}
+		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "timestamp" {
+			goCode += fmt.Sprintf("        e.%s", field.FieldName)
+		}
+		if field.FieldGoType == "time.Time" && field.GetMysqlType() == "datetime" {
+			goCode += fmt.Sprintf("        e.%s", field.FieldName)
+		}
+		if field.IsTimeInt() {
+			goCode += fmt.Sprintf("        formatTimeUnix(e.%s)", field.FieldName)
+		}
+		if field.FieldGoType == "string" {
+			goCode += fmt.Sprintf("        e.%s", field.FieldName)
+		}
+
+		if idx != len(sd.Fields)-1 {
+			goCode += ",\n"
+		}
+	}
+
+	goCode += "}\n"
+
+	goCode += "    return\n"
+	goCode += "}\n"
+	return
 }
 func (sd StructDescription) GenerateInsert() (goCode string) {
 	goCode += fmt.Sprintf("func (e %s) GetInsertSql() (sql string) {\n", sd.StructName)
