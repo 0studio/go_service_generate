@@ -301,11 +301,11 @@ func (sd StructDescription) GenerateDBMultiAdd() string {
 		s :=
 			fmt.Sprintf(
 				`func (this *%s) MultiAdd(%s %s,eMap %sMap, now time.Time) bool {
-	sql := eMap.GetInsertSql()
-	err := this.DatabaseTemplate.Exec(%s, sql)
+	sql,args := eMap.GetInsertSqlWithArgs()
+	err := this.DatabaseTemplate.Exec(%s, sql,args...)
      if err != nil {
         if this.log != nil {
-            this.log.Errorf("[DB.ERR]%s.MultiAdd %%v %%v %%s",%s,err,sql)
+            this.log.Errorf("[DB.ERR]%s.MultiAdd %%v %%v %%s %%v",%s,err,sql,args)
         }
         return false
      }

@@ -119,6 +119,7 @@ var ___importBytes%s bytes.Buffer
 	s += "\n"
 
 	s += sd.GenerateInsertForMap()
+	s += sd.GenerateInsertForMapWithArgs()
 
 	// }
 
@@ -482,6 +483,62 @@ func (eMap %sMap) GetInsertSql() (sql string) {
     return strBuffer.String()
 }
 `, sd.StructName, sd.GetMysqlTableName(), sd.JoinMysqlFieldNameList(","), valuesPos, values)
+
+	return
+}
+func (sd StructDescription) GenerateInsertForMapWithArgs() (goCode string) {
+
+	pkList := sd.GetPKFieldList()
+	if len(pkList) == 0 || len(pkList) > 2 {
+		return ""
+	}
+
+	var valuesPos string
+	for idx, _ := range sd.GetMysqlFieldList() {
+		if idx == 0 {
+			valuesPos += "\"("
+		}
+		valuesPos += "?"
+
+		if idx != len(sd.Fields)-1 {
+			valuesPos += ","
+		}
+	}
+	valuesPos += ")\",\n"
+
+	// values += ")\n"
+
+	goCode += fmt.Sprintf(
+		`
+func (eMap %sMap) GetInsertSqlWithArgs() (sql string,args []interface{}) {
+    if len(eMap) == 0 {
+        return "", nil
+    }
+    var strBuffer bytes.Buffer
+    strBuffer.WriteString("insert into %s(%s)values")
+
+    var idx int=0
+	for _, _ = range eMap {
+        strBuffer.WriteString(fmt.Sprintf(%s ))
+        if idx != len(eMap) - 1 {
+             strBuffer.WriteString(",")
+        }
+        idx++
+	}
+    var eArgs []interface{}
+    idx = 0
+	for _, e := range eMap {
+        _,eArgs = e.GetInsertSqlWithArgs()
+        if idx ==0 {
+            args = make([]interface{},0,len(eMap)*len(eArgs))
+         }
+        args = append(args, eArgs...)
+        idx++
+	}
+
+    return strBuffer.String(),args
+}
+`, sd.StructName, sd.GetMysqlTableName(), sd.JoinMysqlFieldNameList(","), valuesPos)
 
 	return
 }
