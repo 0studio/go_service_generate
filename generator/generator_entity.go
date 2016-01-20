@@ -101,12 +101,15 @@ var ___importBytes%s bytes.Buffer
 	s += fmt.Sprintf("func(e %s) IsFlagDirty() bool {\n", sd.StructName)
 	s += fmt.Sprintf("    return e.flag!=0\n")
 	s += "}\n"
-	s += fmt.Sprintf("func(e %s) ClearFlag() {\n", sd.StructName)
+	s += fmt.Sprintf("func(e *%s) ClearFlag() {\n", sd.StructName)
 	s += fmt.Sprintf("    e.flag=0\n")
 	s += "}\n"
 
 	s += fmt.Sprintf("func(e %s) IsFlagNew() bool {\n", sd.StructName)
 	s += fmt.Sprintf("    return e.flag.IsPosTrue(%d)\n", len(sd.Fields))
+	s += "}\n"
+	s += fmt.Sprintf("func(e *%s) ClearFlagNew() {\n", sd.StructName)
+	s += fmt.Sprintf("    e.flag.UnSetFlag(%d)\n", len(sd.Fields))
 	s += "}\n"
 
 	s += sd.GenerateInsert()
