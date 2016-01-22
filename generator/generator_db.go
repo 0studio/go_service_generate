@@ -705,7 +705,6 @@ func (sd StructDescription) GenerateDBGetIdList() string {
 			`
 func (this *%s) GetIdListByPK1(%s %s, now time.Time) (idList %s, ok bool) {
 	sqlstr := fmt.Sprintf("select %s from %s where %s = ?")
-	var rows []interface{}
 	mapRow := func(resultSet *sql.Rows) (interface{}, error) {
 		var %s %s //need fix maybe
 		err := resultSet.Scan(&%s)
