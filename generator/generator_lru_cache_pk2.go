@@ -48,7 +48,7 @@ func (sd StructDescription) generateLRUCache2PK(pk1Field FieldDescriptoin, pk2Fi
 
 	s = strings.Replace(s, "__PK2TypeList__", pk2TypeList, -1)
 
-	formatSrc, _ := format.Source([]byte(s))
+	formatSrc, err := format.Source([]byte(s))
 	if err == nil {
 		outputF.WriteString(string(formatSrc))
 	} else {
@@ -119,6 +119,26 @@ func (m *LRUCache__Entity__Storage) Set(e *__Entity__, now time.Time) (ok bool) 
 	return true
 }
 func (m *LRUCache__Entity__Storage) Add(e *__Entity__, now time.Time) (ok bool) {
+    ok = m.add(e,now)
+    if ok &&LRU_CACHE_USE_LIST___Entity__{
+        list,listOk := m.GetIdListByPK1(e.__PK1FieldName__,now)
+        if listOk {
+             var isInList bool
+             for _, id:= range list{
+                 if id==e.__PK2FieldName__{
+                      isInList = true
+                      break
+                 }
+             }
+             if !isInList{
+                  list = append(list,e.__PK2FieldName__)
+                  m.SetIdListByPK1(e.__PK1FieldName__,&list,now)
+             }
+        }
+    }
+    return
+}
+func (m *LRUCache__Entity__Storage) add(e *__Entity__, now time.Time) (ok bool) {
 	sm := m.getMap(e.__PK1FieldName__)
 	if sm == nil {
 		sm = make(__Entity__Map)
@@ -167,7 +187,19 @@ func (m *LRUCache__Entity__Storage) Delete(__PK1FieldName__ __PK1Type__, __PK2Fi
 		return true
 	}
 	delete(sm, __PK2FieldName__)
-
+    now:=time.Now()
+    if LRU_CACHE_USE_LIST___Entity__{
+		list,listOk := m.GetIdListByPK1(__PK1FieldName__,now)
+		if listOk {
+				newList:=make(__PK2TypeList__,0,2*len(list))
+				for _, tmpId:= range list{
+					if tmpId!=__PK2FieldName__{
+						newList = append(newList,tmpId)
+					}
+				}
+				m.SetIdListByPK1(__PK1FieldName__,&newList,now)
+		}
+    }
 	return true
 }
 func (m *LRUCache__Entity__Storage) MultiDelete(__PK1FieldName__ __PK1Type__, keys __PK2TypeList__) (ok bool) {
@@ -178,11 +210,17 @@ func (m *LRUCache__Entity__Storage) MultiDelete(__PK1FieldName__ __PK1Type__, ke
 }
 
 func (m *LRUCache__Entity__Storage) SetIdListByPK1(__PK1FieldName__ __PK1Type__, idList *__PK2TypeList__, now time.Time) bool {
+    if !LRU_CACHE_USE_LIST___Entity__{
+        return true
+    }
 	m.cacheList.Set(__PK1FieldName__, *idList)
 	return true
 }
 
 func (m *LRUCache__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__, now time.Time) (list __PK2TypeList__, ok bool) {
+    if !LRU_CACHE_USE_LIST___Entity__{
+        return
+    }
 	cacheObj, ok := m.cacheList.Get(__PK1FieldName__)
 	if !ok {
 		return
@@ -191,6 +229,9 @@ func (m *LRUCache__Entity__Storage) GetIdListByPK1(__PK1FieldName__ __PK1Type__,
 	return
 }
 func (m *LRUCache__Entity__Storage) DeleteIdListByPK1(__PK1FieldName__ __PK1Type__) (ok bool) {
+    if !LRU_CACHE_USE_LIST___Entity__{
+        return
+    }
 	m.cacheList.Delete(__PK1FieldName__)
 	return true
 }

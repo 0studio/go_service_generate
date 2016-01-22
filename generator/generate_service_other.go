@@ -54,6 +54,7 @@ import (
 const (
 	LRU_Cache_Sharding_Cnt___Entity__   = 32   // lru sharding for reducing lock time
 	LRU_Cache_Size___Entity__           = 1024 // total size of lru cache
+	LRU_CACHE_USE_LIST___Entity__ bool           = true // use cache.cacheList cache idlist or not
 	Memcache_Expired_Seconds___Entity__ = 60 * 30
 	Memcache_Prefix___Entity__          = "__LowercaseEntity__"
 )

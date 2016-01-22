@@ -77,6 +77,9 @@ func (sd StructDescription) generateServiceGetAll() (declare string, implements 
 		LowerCaseFirstChar(pkList[0].FieldName), pkList[0].FieldGoType, sd.GetSuggestMapName())
 	implements =
 		fmt.Sprintf(`func (impl *%sServiceImpl) GetAll(%s %s, now time.Time) (eMap %s, ok bool) {
+     // maybe bug if you do not update idlist  when you add ,delete
+     // maybe the cachedIdList is dirty by some reason
+     // so you should use this carefully
 	idList, ok := impl.GetIdListByPK1(%s, now)
 	if !ok {
 		return
