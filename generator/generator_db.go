@@ -41,6 +41,7 @@ var ___importGoutilsDB%s goutils.Int32List
 	s += sd.GenerateDBMapRow()
 	s += sd.GenerateDBGetAll()
 	s += sd.GenerateDBGetAllSql()
+	s += sd.GenerateDBGetByPK2()
 	s += sd.GenerateDBGet()
 	s += sd.GenerateDBAdd()
 	s += sd.GenerateDBMultiAdd()
@@ -761,6 +762,43 @@ func (this *%s) SetIdListByPK1(%s %s, idList *%s,now time.Time) (ok bool) {
 	return true
 }
 `, sd.GetDBStorageName(), pkList[0].FieldName, pkList[0].FieldGoType, multKey)
+	return s
+
+}
+func (sd StructDescription) GenerateDBGetByPK2() string {
+	pkList := sd.GetPKFieldList()
+	if len(pkList) != 2 {
+		return ""
+	}
+
+	var keySum string = "nil"
+	s :=
+		fmt.Sprintf(
+			`
+func (this *%s) GetBy%s(%s %s) (list %sList, ok bool) {
+	sqlstr := fmt.Sprintf("select %s from %s where %s = ?")
+	rows, err := this.DatabaseTemplate.QueryArray(%s, sqlstr, this.mapRow, %s)
+	if err != nil {
+		if this.log != nil {
+			this.log.Errorf("[DB.ERR]%s.GetBy%s %%v %%v",err,%s)
+		}
+		return
+	}
+	list = make(%sList, len(rows))
+	for i, obj := range rows {
+		list[i] = (obj.(%s))
+	}
+	return list, true
+}
+
+`,
+			sd.GetDBStorageName(), Camelize(pkList[1].FieldName), pkList[1].FieldName, pkList[1].FieldGoType, sd.StructName,
+			sd.JoinMysqlFieldNameList(","), sd.GetMysqlTableName(), pkList[1].GetMysqlFieldName(),
+			keySum, pkList[1].FieldName,
+			sd.GetDBStorageName(), Camelize(pkList[1].FieldName), pkList[1].FieldName,
+			sd.StructName,
+			sd.StructName,
+		)
 	return s
 
 }
